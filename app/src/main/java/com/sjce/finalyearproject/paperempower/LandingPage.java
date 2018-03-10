@@ -18,16 +18,24 @@ import static android.app.PendingIntent.getActivity;
 
 public class LandingPage extends AppCompatActivity {
 
-
-
-//    public static final String sharedPreferenceName="PaperEmpower";
-
+        private static final String key="Logged In";
+        private static final String val="true";
+        SharedPreferences pref;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
+        pref=getApplicationContext().getSharedPreferences("Paper Empower",0);
+        SharedPreferences.Editor editor=pref.edit();
+        if(pref.getString(key,"false").equals(val))
+        {
+            Log.d("Motherfucking tag","Inside sharedPref if");
+            Intent i=new Intent(this,RegisterOrCollect.class);
+            startActivity(i);
+            return;
+        }
         Button btn=this.findViewById(R.id.next2);
         btn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -48,16 +56,21 @@ public class LandingPage extends AppCompatActivity {
     private void next(View v)
     {
         Log.d("motherfucking tag","Inside showSignUp()");
-        LinearLayout signUpLL= this.findViewById(R.id.SignUp);
+        pref=getApplicationContext().getSharedPreferences("Paper Empower",0);
+        SharedPreferences.Editor editor=pref.edit();
         EditText username=this.findViewById(R.id.usernameEditText);
         Log.d("motherfucking tag", String.valueOf(username.getText()));
         String usernameText=String.valueOf(username.getText());
         Button btn=this.findViewById(R.id.nextButton);
         Button btn2=this.findViewById(R.id.next2);
-        TextView cnfmpwdtv=this.findViewById(R.id.confirmPasswordTextView);
-        TextView cnfmpwdet=this.findViewById(R.id.confirmPasswordEditText);
+        EditText pwd=this.findViewById(R.id.passwordEditText);
+        String pwdSt=String.valueOf(pwd.getText());
+
         if(!isRegistered(usernameText))
         {
+            LinearLayout signUpLL= this.findViewById(R.id.SignUp);
+            TextView cnfmpwdtv=this.findViewById(R.id.confirmPasswordTextView);
+            TextView cnfmpwdet=this.findViewById(R.id.confirmPasswordEditText);
             cnfmpwdtv.setVisibility(View.VISIBLE);
             cnfmpwdet.setVisibility(View.VISIBLE);
             signUpLL.setVisibility(View.VISIBLE);
@@ -66,26 +79,18 @@ public class LandingPage extends AppCompatActivity {
            btn2.setVisibility(View.VISIBLE);
 
         }
+        else{
+            if(isCorrectPassword(usernameText,pwdSt))
+            {
+                editor.putString(key,val);
+                editor.commit();
+            }
+        }
 
 
 
     }
 
-//    private void validateForm(View v){
-//        EditText pass1=this.findViewById(R.id.passwordEditText);
-//        EditText pass2=this.findViewById(R.id.confirmPasswordEditText);
-//        String pwd1= String.valueOf(pass1.getText());
-//        String pwd2= String.valueOf(pass2.getText());
-//        Log.d("motherfucking tag","In validate form");
-//        if(pwd1.equals(pwd2))
-//        {
-//            Intent i=new Intent(this,RegisterOrCollect.class);
-//            startActivity(i);
-//
-//        }
-//
-//
-//    }
 
     private void registerVolunteer()
     {
@@ -105,12 +110,6 @@ public class LandingPage extends AppCompatActivity {
         String pwdcmfSt=String.valueOf(pwdcmf.getText());
         if(pwdSt.equals(pwdcmfSt)){
 
-//            editor.putString(nameSt,nameSt);
-//            editor.putString(phNumSt,phNumSt);
-//            editor.putString(emailSt,emailSt);
-//            editor.putString(usrnmSt,usrnmSt);
-//            editor.putString(pwdSt,pwdSt);
-//            editor.commit();
             registerUser(nameSt,phNumSt,emailSt,usrnmSt,pwdSt);
 
         }
@@ -124,7 +123,11 @@ public class LandingPage extends AppCompatActivity {
 
     private void registerUser(String name,String phNum,String email,String userName,String passWord)
     {
+        pref=getApplicationContext().getSharedPreferences("Paper Empower",0);
+        SharedPreferences.Editor editor=pref.edit();
         Log.d("Motherfucking tag",name+phNum+email+userName+passWord);
+        editor.putString(key,val);
+        editor.commit();
         Intent i=new Intent(this,RegisterOrCollect.class);
         startActivity(i);
     }
@@ -132,5 +135,10 @@ public class LandingPage extends AppCompatActivity {
     boolean isRegistered(String name){
         Log.d("Motherfucking tag",name);
         return false;
+    }
+
+    boolean isCorrectPassword(String usrNm,String pwd)
+    {
+        return true;
     }
 }
