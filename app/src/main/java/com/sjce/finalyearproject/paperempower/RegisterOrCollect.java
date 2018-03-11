@@ -1,5 +1,6 @@
 package com.sjce.finalyearproject.paperempower;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -32,7 +33,8 @@ public class RegisterOrCollect extends AppCompatActivity {
     }
 
     public void registerEvent(View v){
-
+        Intent i=new Intent(this,RegisterNewUser.class);
+        startActivity(i);
     }
 
     public void collectEvent(View v){
