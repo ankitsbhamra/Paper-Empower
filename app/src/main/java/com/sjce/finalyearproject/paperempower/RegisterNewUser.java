@@ -2,6 +2,7 @@ package com.sjce.finalyearproject.paperempower;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +17,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -30,14 +32,18 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import static android.content.ContentValues.TAG;
+
 public class RegisterNewUser extends AppCompatActivity {
 
     LinearLayout ll;
-    TextView lat;
-    TextView lon;
+    TextView latitude;
+    TextView longitude;
     Button coord;
     LocationManager locationManager;
     LocationListener locationListener;
+    double lat, lng;
+
 
     private static final String TAG = "Motherfucking tag";
     private Boolean flag = false;
@@ -48,28 +54,214 @@ public class RegisterNewUser extends AppCompatActivity {
         setContentView(R.layout.activity_register_new_user);
 
         ll = this.findViewById(R.id.coordinatesLinearLayout);
-        lat = this.findViewById(R.id.lat);
-        lon = this.findViewById(R.id.lon);
+        latitude = this.findViewById(R.id.lat);
+        longitude = this.findViewById(R.id.lon);
         coord = this.findViewById(R.id.getCoordinatesButton);
         //if you want to lock screen for always Portrait mode
         //  setRequestedOrientation(ActivityInfo
         //        .SCREEN_ORIENTATION_PORTRAIT);
 
+        locationManager = (LocationManager)
+                getSystemService(Context.LOCATION_SERVICE);
 
         coord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getCoord();
+                Log.d(TAG, "Inside onClick");
+                ll.setVisibility(View.VISIBLE);
+                getCoordGPS();
             }
         });
 
-        locationManager = (LocationManager)
-                getSystemService(Context.LOCATION_SERVICE);
 
     }
 
 
-    @SuppressLint("NewApi")
+    public void getCoordNETOWRK() {
+        Log.d(TAG, "Inside getCoord()");
+        String provider = LocationManager.NETWORK_PROVIDER;
+
+        if (ActivityCompat.checkSelfPermission(RegisterNewUser.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(RegisterNewUser.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(RegisterNewUser.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            Log.d(TAG, "Inside if");
+            return;
+        } else {
+
+            Log.d(TAG, "Inside else");
+            Location loc = locationManager.getLastKnownLocation(provider);
+            Log.d(TAG, String.valueOf(loc));
+            if (loc != null) {
+                lat = loc.getLatitude();
+                lng = loc.getLongitude();
+                String txt = "Latitude:" + Double.toString(lat) +
+                        "\nLongitude:" + Double.toString(lng);
+                //float distance= haversine(lat,lng,13.003062,77.564293);
+                Geocoder geocoder;
+                List<Address> addresses;
+                geocoder = new Geocoder(this, Locale.getDefault());
+                Log.d(TAG, "Inside location check");
+
+
+                try {
+                    Log.d(TAG, "Getting location");
+
+                    addresses = geocoder.getFromLocation(lat, lng, 1);
+                    String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                    String city = addresses.get(0).getLocality();
+                    String state = addresses.get(0).getAdminArea();
+                    String country = addresses.get(0).getCountryName();
+                    String postalCode = addresses.get(0).getPostalCode();
+                    String knownName = addresses.get(0).getFeatureName();
+                    Log.d(TAG, address + ":" + city + ":" + state + ":" + country + ":" + postalCode + ":" + knownName);
+                    latitude.setText("Latitude:" + lat);
+                    longitude.setText("Longitude:" + lng);
+
+                    //textview.setText((CharSequence) addresses);// Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            } else {
+                latitude.setText("Latitude: NA");
+                longitude.setText("Longitude: NA");
+            }
+
+
+        }
+
+
+    }
+
+    public void ifChecker()
+    {
+        getCoordGPS();
+    }
+
+    public void getCoordGPS() {
+        Log.d(TAG,"Inside getCoordGPS");
+        flag = displayGpsStatus();
+        Log.d(TAG, String.valueOf(flag));
+        if (flag) {
+//            locationListener = new MyLocationListener();
+
+            locationListener=new LocationListener() {
+                @Override
+                public void onLocationChanged(Location loc) {
+                    String longitude = "Longitude: " +loc.getLongitude();
+                    Log.d(TAG, longitude);
+                    String latitude = "Latitude: " +loc.getLatitude();
+                    Log.d(TAG, latitude);
+
+                    //*----------to get City-Name from coordinates ------------- *//*
+                    String cityName=null;
+                    Geocoder gcd = new Geocoder(getBaseContext(),
+                            Locale.getDefault());
+                    List<Address> addresses;
+                    try {
+                        addresses = gcd.getFromLocation(loc.getLatitude(), loc
+                                .getLongitude(), 1);
+                        if (addresses.size() > 0)
+                            System.out.println(addresses.get(0).getLocality());
+                        cityName=addresses.get(0).getLocality();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    String s = longitude+"\n"+latitude +
+                            "\n\nMy Currrent City is: "+cityName;
+                    Log.d(TAG,s);
+                }
+
+                @Override
+                public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String s) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String s) {
+
+                }
+            };
+            if (ActivityCompat.checkSelfPermission(RegisterNewUser.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(RegisterNewUser.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(RegisterNewUser.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                Log.d(TAG, "Inside if");
+                ifChecker();
+            } else {
+                Log.d(TAG,"Inside else");
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+                Location loc=locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if(loc==null)
+                    Log.d(TAG, "loc is null");
+                else{
+                    Log.d(TAG, "Value of loc:"+String.valueOf(loc.getLatitude()));
+                    latitude.setText("Lat:"+loc.getLatitude());
+                    longitude.setText("Lat:"+loc.getLongitude());
+                }
+            }
+
+        } else {
+            alertbox("Gps Status!!", "Your GPS is: OFF");
+        }
+
+    }
+
+    private Boolean displayGpsStatus() {
+        ContentResolver contentResolver = getBaseContext()
+                .getContentResolver();
+        boolean gpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        if (gpsStatus) {
+            return true;
+
+        } else {
+            return false;
+        }
+    }
+
+    protected void alertbox(String title, String mymessage) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your Device's GPS is Disable")
+                .setCancelable(false)
+                .setTitle("** Gps Status **")
+                .setPositiveButton("Gps On",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // finish the current activity
+                                // AlertBoxAdvance.this.finish();
+                                Intent myIntent = new Intent(
+                                        Settings.ACTION_SECURITY_SETTINGS);
+                                startActivity(myIntent);
+                                dialog.cancel();
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // cancel the dialog box
+                                dialog.cancel();
+                            }
+                        });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+}
+
+
+
+
+
+
+
+
+/*    @SuppressLint("NewApi")
     public void getCoord() {
         flag = displayGpsStatus();
         if (flag) {
@@ -94,7 +286,7 @@ public class RegisterNewUser extends AppCompatActivity {
                 ///========================///
                 //=====FIX CODE HERE======//
                 // /======================///
-                ActivityCompat.requestPermissions(this,);
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},);
                 return;
             }
             locationManager.requestLocationUpdates(LocationManager
@@ -106,7 +298,7 @@ public class RegisterNewUser extends AppCompatActivity {
 
     }
 
-    /*----Method to Check GPS is enable or disable ----- */
+    *//*----Method to Check GPS is enable or disable ----- *//*
     private Boolean displayGpsStatus() {
         ContentResolver contentResolver = getBaseContext()
                 .getContentResolver();
@@ -121,7 +313,7 @@ public class RegisterNewUser extends AppCompatActivity {
         }
     }
 
-    /*----------Method to create an AlertBox ------------- */
+    *//*----------Method to create an AlertBox ------------- *//*
     protected void alertbox(String title, String mymessage) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Your Device's GPS is Disable")
@@ -149,7 +341,7 @@ public class RegisterNewUser extends AppCompatActivity {
         alert.show();
     }
 
-    /*----------Listener class to get coordinates ------------- */
+    *//*----------Listener class to get coordinates ------------- *//*
     private class MyLocationListener implements LocationListener {
         @Override
         public void onLocationChanged(Location loc) {
@@ -164,7 +356,7 @@ public class RegisterNewUser extends AppCompatActivity {
             String latitude = "Latitude: " +loc.getLatitude();
             Log.v(TAG, latitude);
 
-    /*----------to get City-Name from coordinates ------------- */
+    *//*----------to get City-Name from coordinates ------------- *//*
             String cityName=null;
             Geocoder gcd = new Geocoder(getBaseContext(),
                     Locale.getDefault());
@@ -199,9 +391,9 @@ public class RegisterNewUser extends AppCompatActivity {
                                     int status, Bundle extras) {
             // TODO Auto-generated method stub
         }
-    }
+    }*/
 
-}
+
 
 
 
