@@ -22,6 +22,7 @@ public class RegisterOrCollect extends AppCompatActivity {
             public void onClick(View v){
                 Log.d("Motherfucking tag","Inside next2 onclick listener");
                 registerEvent(v);
+
             }
         });
 
@@ -38,7 +39,9 @@ public class RegisterOrCollect extends AppCompatActivity {
     }
 
     public void collectEvent(View v){
-
+        Intent i=new Intent(this,MapsActivity.class);
+        startActivity(i);
     }
+
 
 }

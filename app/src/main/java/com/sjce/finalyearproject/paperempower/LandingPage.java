@@ -108,6 +108,26 @@ public class LandingPage extends AppCompatActivity {
         String usrnmSt=String.valueOf(usrnm.getText());
         String pwdSt=String.valueOf(pwd.getText());
         String pwdcmfSt=String.valueOf(pwdcmf.getText());
+        if(nameSt.isEmpty())
+        {
+            name.setError("Name cannot be empty");
+        }
+        if(phNumSt.isEmpty())
+        {
+            phNum.setError("Phone Number cannot be empty");
+        }
+        if(emailSt.isEmpty())
+        {
+            email.setError("Email cannot be empty");
+        }
+        if(usrnmSt.isEmpty())
+        {
+            usrnm.setError("User name cannot be empty");
+        }
+        if(pwdSt.isEmpty())
+        {
+            name.setError("Password cannot be empty");
+        }
         if(pwdSt.equals(pwdcmfSt)){
 
             registerUser(nameSt,phNumSt,emailSt,usrnmSt,pwdSt);
@@ -130,6 +150,8 @@ public class LandingPage extends AppCompatActivity {
         editor.commit();
         Intent i=new Intent(this,RegisterOrCollect.class);
         startActivity(i);
+
+
     }
 
     boolean isRegistered(String name){
