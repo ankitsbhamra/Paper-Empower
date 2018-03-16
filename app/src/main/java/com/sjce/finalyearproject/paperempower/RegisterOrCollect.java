@@ -42,6 +42,7 @@ public class RegisterOrCollect extends AppCompatActivity {
     public void collectEvent(View v){
         Intent i=new Intent(this,MapsActivity.class);
         startActivity(i);
+
     }
 
 }

@@ -40,6 +40,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(marker3).title("Marker in SJCE"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(marker3));
 
-
     }
 }

@@ -26,6 +26,7 @@ import java.io.Console;
 
 import static android.app.PendingIntent.getActivity;
 
+
 public class LandingPage extends AppCompatActivity {
 
         private static final String key="Logged In";
@@ -77,6 +78,10 @@ public class LandingPage extends AppCompatActivity {
     //TODO: Make password EditText Input Type to Password type
     //TODO: Add Validation Tests to all fields
     //TODO: Change field TextViews to hints
+    //TODO: add progress bar while logging in
+    //TODO: add zoom-in feature to map
+    //TODO: add an activity after collect - checkbox
+    //TODO: add line between markers
 
     private void next(View v)
     {
