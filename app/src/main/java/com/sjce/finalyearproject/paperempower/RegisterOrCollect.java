@@ -12,12 +12,14 @@ import android.widget.Button;
 
 public class RegisterOrCollect extends AppCompatActivity {
 
+    //TODO: Add Logout Button
+    //TODO: Add Volunteer name at the top
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_or_collect);
-        Button btnReg=this.findViewById(R.id.registerButton);
-        Button btnCol=this.findViewById(R.id.collectButton);
+        Button btnReg= (Button) this.findViewById(R.id.registerButton);
+        Button btnCol= (Button) this.findViewById(R.id.collectButton);
         btnReg.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 Log.d("Motherfucking tag","Inside next2 onclick listener");
@@ -38,7 +40,8 @@ public class RegisterOrCollect extends AppCompatActivity {
     }
 
     public void collectEvent(View v){
-
+        Intent i=new Intent(this,MapsActivity.class);
+        startActivity(i);
     }
 
 }

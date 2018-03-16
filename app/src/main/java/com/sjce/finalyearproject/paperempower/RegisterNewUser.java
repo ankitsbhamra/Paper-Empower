@@ -53,10 +53,10 @@ public class RegisterNewUser extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_new_user);
 
-        ll = this.findViewById(R.id.coordinatesLinearLayout);
-        latitude = this.findViewById(R.id.lat);
-        longitude = this.findViewById(R.id.lon);
-        coord = this.findViewById(R.id.getCoordinatesButton);
+        ll = (LinearLayout) this.findViewById(R.id.coordinatesLinearLayout);
+        latitude = (TextView) this.findViewById(R.id.lat);
+        longitude = (TextView) this.findViewById(R.id.lon);
+        coord = (Button) this.findViewById(R.id.getCoordinatesButton);
         //if you want to lock screen for always Portrait mode
         //  setRequestedOrientation(ActivityInfo
         //        .SCREEN_ORIENTATION_PORTRAIT);

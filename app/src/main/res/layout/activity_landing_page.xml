@@ -47,20 +47,7 @@
             android:id="@+id/phNumberEditText"
             />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Email Id"
-            android:textSize="24sp"
-            android:textColor="@color/colorBlack"
-            android:id="@+id/emailIdTextview"
-            />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/emailIdEditText"
-            />
 
 
 
@@ -79,17 +66,16 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Username"
+            android:text="Email Id"
             android:textSize="24sp"
             android:textColor="@color/colorBlack"
-            android:id="@+id/usernameTextview"
+            android:id="@+id/emailIdTextview"
             />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/usernameEditText"
-
+            android:id="@+id/emailIdEditText"
             />
 
         <TextView
@@ -148,7 +134,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Next"
+        android:text="Sign Up"
         android:id="@+id/next2"
         android:visibility="gone"
         />
