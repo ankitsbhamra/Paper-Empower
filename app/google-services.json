@@ -1,0 +1,86 @@
+{
+  "project_info": {
+    "project_number": "999093855260",
+    "firebase_url": "https://paperempower-7611c.firebaseio.com",
+    "project_id": "paperempower-7611c",
+    "storage_bucket": "paperempower-7611c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999093855260:android:985e9e4dd1f19f70",
+        "android_client_info": {
+          "package_name": "com.example.ankit.paperempower"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999093855260-45lc3m0co8n8u8cvorqped2ctcj4361s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ankit.paperempower",
+            "certificate_hash": "80852c4efa9efbd9ab7943da78c365d861db23f2"
+          }
+        },
+        {
+          "client_id": "999093855260-7td6kt2tdhf6k08br0n6gdm1fvum7hvh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQkkxeATVT93aBiXyLWR7YiPdnG1Ln9gY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999093855260-7td6kt2tdhf6k08br0n6gdm1fvum7hvh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999093855260:android:cb9384b01710632d",
+        "android_client_info": {
+          "package_name": "com.sjce.finalyearproject.paperempower"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999093855260-7td6kt2tdhf6k08br0n6gdm1fvum7hvh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQkkxeATVT93aBiXyLWR7YiPdnG1Ln9gY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
