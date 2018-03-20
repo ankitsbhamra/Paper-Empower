@@ -7,62 +7,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     tools:context="com.sjce.finalyearproject.paperempower.RegisterNewUser">
 
 
 
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Name"
-        android:id="@+id/nameTextview"
-        android:textSize="24sp"
-        android:textColor="@color/colorBlack"
-        />
-
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:hint="Name"
         android:id="@+id/nameEditText"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Contact Number"
         android:textSize="24sp"
         android:textColor="@color/colorBlack"
-        android:id="@+id/phNumberTextview"
         />
+
+
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:id="@id/phNumberEditText"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Address"
+        android:hint="Contact Number"
         android:textSize="24sp"
         android:textColor="@color/colorBlack"
-        android:id="@+id/addressTextView"
+        android:id="@+id/phNumberEditText"
         />
+
+
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:hint="Address"
+        android:textSize="24sp"
+        android:textColor="@color/colorBlack"
         android:id="@+id/addressEditText"
         />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:hint="Zip Code"
+        android:textSize="24sp"
+        android:textColor="@color/colorBlack"
+        android:id="@+id/zipcodeEditText"
+        />
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -71,7 +65,7 @@
         android:layout_margin="10dp"
         android:visibility="gone"
         android:id="@+id/coordinatesLinearLayout"
-        android:gravity="center"
+        android:gravity="center_horizontal"
 
         >
 
@@ -80,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:text="Latitude:"
-            android:textSize="24sp"
+            android:textSize="15sp"
             android:textColor="@color/colorBlack"
             android:id="@+id/lat"
             />
@@ -89,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:text="Longitude:"
-            android:textSize="24sp"
+            android:textSize="15sp"
             android:id="@+id/lon"
             android:textColor="@color/colorBlack"
             />
@@ -101,6 +95,14 @@
         android:layout_height="wrap_content"
         android:text="Get coordinates"
         android:id="@+id/getCoordinatesButton"
+
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register House"
+        android:id="@+id/registerHouseButton"
+
         />
 </LinearLayout>
 

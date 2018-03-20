@@ -28,6 +28,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -39,10 +42,15 @@ public class RegisterNewUser extends AppCompatActivity {
     LinearLayout ll;
     TextView latitude;
     TextView longitude;
-    Button coord;
+    EditText zipcode;
+    EditText name;
+    EditText number;
+    EditText address;
+    Button coord,register;
     LocationManager locationManager;
     LocationListener locationListener;
     double lat, lng;
+    DatabaseReference housesref;
 
 
     private static final String TAG = "Motherfucking tag";
@@ -52,11 +60,14 @@ public class RegisterNewUser extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_new_user);
-
+        housesref = FirebaseDatabase.getInstance().getReference("houses");
         ll = (LinearLayout) this.findViewById(R.id.coordinatesLinearLayout);
         latitude = (TextView) this.findViewById(R.id.lat);
         longitude = (TextView) this.findViewById(R.id.lon);
+        zipcode = (EditText) this.findViewById(R.id.zipcodeEditText);
+        name = (EditText) this.findViewById(R.id.nameEditText);
         coord = (Button) this.findViewById(R.id.getCoordinatesButton);
+        register = (Button) this.findViewById(R.id.registerHouseButton);
         //if you want to lock screen for always Portrait mode
         //  setRequestedOrientation(ActivityInfo
         //        .SCREEN_ORIENTATION_PORTRAIT);
@@ -72,8 +83,54 @@ public class RegisterNewUser extends AppCompatActivity {
                 getCoordGPS();
             }
         });
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "Inside onClick of Register");
+                //ll.setVisibility(View.VISIBLE);
+                registerHouse();
+            }
+        });
 
 
+    }
+
+    public void registerHouse(){
+        zipcode = (EditText) this.findViewById(R.id.zipcodeEditText);
+        name = (EditText) this.findViewById(R.id.nameEditText);
+        number = (EditText) this.findViewById(R.id.phNumberEditText);
+        address = (EditText) this.findViewById(R.id.addressEditText);
+        //TODO: Check if lat and Lon are empty
+        Double lat = Double.parseDouble(latitude.toString().trim());
+        Double lon = Double.parseDouble(longitude.toString().trim());
+        String zip = zipcode.toString().trim();
+        String fullname = name.toString().trim();
+        String addr = address.toString().trim();
+        String num = number.toString().trim();
+        if(fullname.isEmpty()){
+            name.setError("Name Cannot Be Empty");
+            name.requestFocus();
+            return;
+        }
+        if(zip.isEmpty()){
+            zipcode.setError("Zip Code Cannot Be Empty");
+            zipcode.requestFocus();
+            return;
+        }
+        if(addr.isEmpty()){
+            address.setError("Address Cannot Be Empty");
+            address.requestFocus();
+            return;
+        }
+        if(num.isEmpty()){
+            number.setError("Phone Number Cannot Be Empty");
+            number.requestFocus();
+            return;
+        }
+        String key = housesref.push().getKey();
+        HousesInfo housesInfo = new HousesInfo(fullname,addr,num,zip,lat,lon,key);
+        housesref.child(key).setValue(housesInfo);
+        Toast.makeText(RegisterNewUser.this, "House Registered!", Toast.LENGTH_LONG).show();
     }
 
 
@@ -115,6 +172,7 @@ public class RegisterNewUser extends AppCompatActivity {
                     Log.d(TAG, address + ":" + city + ":" + state + ":" + country + ":" + postalCode + ":" + knownName);
                     latitude.setText("Latitude:" + lat);
                     longitude.setText("Longitude:" + lng);
+                    zipcode.setText(postalCode);
 
                     //textview.setText((CharSequence) addresses);// Here 1 represent max location result to returned, by documents it recommended 1 to 5
                 } catch (IOException e) {
@@ -202,7 +260,7 @@ public class RegisterNewUser extends AppCompatActivity {
                 else{
                     Log.d(TAG, "Value of loc:"+String.valueOf(loc.getLatitude()));
                     latitude.setText("Lat:"+loc.getLatitude());
-                    longitude.setText("Lat:"+loc.getLongitude());
+                    longitude.setText("Lon:"+loc.getLongitude());
                 }
             }
 

@@ -1,5 +1,17 @@
 package com.sjce.finalyearproject.paperempower;
 
+//TODO: Create collect activity with ListView
+//TODO: Add Button in Scroll View
+//TODO: Make password EditText Input Type to Password type
+//TODO: Add Validation Tests to all fields
+//TODO: Change field TextViews to hints
+//TODO: add progress bar while logging in
+//TODO: add zoom-in feature to map
+//TODO: add an activity after collect - checkbox
+//TODO: add poly-line between markers
+//TODO: add area as drop down
+
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +19,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,11 +33,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 import java.io.Console;
 
 import static android.app.PendingIntent.getActivity;
+
 
 
 public class LandingPage extends AppCompatActivity {
@@ -33,6 +49,8 @@ public class LandingPage extends AppCompatActivity {
         private static final String val="true";
         SharedPreferences pref;
         private FirebaseAuth fbaseauth;
+        private ProgressDialog progressDialog;
+        DatabaseReference usersref;
 
 
 
@@ -41,6 +59,8 @@ public class LandingPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
         fbaseauth = FirebaseAuth.getInstance();
+        usersref = FirebaseDatabase.getInstance().getReference("users");
+        progressDialog = new ProgressDialog(this);
         pref=getApplicationContext().getSharedPreferences("Paper Empower",0);
         SharedPreferences.Editor editor=pref.edit();
         if(pref.getString(key,"false").equals("val"))
@@ -74,14 +94,8 @@ public class LandingPage extends AppCompatActivity {
     Button btn2;
     EditText pwd;
     EditText email;
-    //TODO: Add Button in Scroll View
-    //TODO: Make password EditText Input Type to Password type
-    //TODO: Add Validation Tests to all fields
-    //TODO: Change field TextViews to hints
-    //TODO: add progress bar while logging in
-    //TODO: add zoom-in feature to map
-    //TODO: add an activity after collect - checkbox
-    //TODO: add line between markers
+
+
 
     private void next(View v)
     {
@@ -89,7 +103,7 @@ public class LandingPage extends AppCompatActivity {
         pref=getApplicationContext().getSharedPreferences("Paper Empower",0);
         SharedPreferences.Editor editor=pref.edit();
         signUpLL= (LinearLayout) this.findViewById(R.id.SignUp);
-        cnfmpwdtv= (TextView) this.findViewById(R.id.confirmPasswordTextView);
+        //cnfmpwdtv= (TextView) this.findViewById(R.id.confirmPasswordTextView);
         cnfmpwdet= (TextView) this.findViewById(R.id.confirmPasswordEditText);
         btn= (Button) this.findViewById(R.id.nextButton);
         btn2= (Button) this.findViewById(R.id.next2);
@@ -99,7 +113,8 @@ public class LandingPage extends AppCompatActivity {
         String emailSt= String.valueOf(email.getText());
 
         Log.d("Moth","In next()"+emailSt+pwdSt);
-
+        progressDialog.setMessage("Logging In User");
+        progressDialog.show();
         fbaseauth.signInWithEmailAndPassword(emailSt, pwdSt).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -116,6 +131,7 @@ public class LandingPage extends AppCompatActivity {
 
                 } else if (task.getException() instanceof FirebaseAuthInvalidUserException) {
 
+                    progressDialog.cancel();
                     cnfmpwdtv.setVisibility(View.VISIBLE);
                     cnfmpwdet.setVisibility(View.VISIBLE);
                     signUpLL.setVisibility(View.VISIBLE);
@@ -125,8 +141,9 @@ public class LandingPage extends AppCompatActivity {
                     Toast.makeText(LandingPage.this, "User Doesn't Exist. Please Sign-up First", Toast.LENGTH_LONG).show();
                 }
                 else{
-                    email.requestFocus();
-                    email.setError("The email id is not registered");
+                    progressDialog.cancel();
+                    pwd.requestFocus();
+                    pwd.setError("The email id is not registered");
                 }
             }
         });
@@ -162,20 +179,39 @@ public class LandingPage extends AppCompatActivity {
         emailSt=String.valueOf(email.getText());
         pwdSt=String.valueOf(pwd.getText());
         pwdcmfSt=String.valueOf(pwdcmf.getText());
-        if(pwdSt.equals(pwdcmfSt)){
+        if(emailSt.isEmpty()){
+            email.setError("Email ID is mandatory");
+            email.requestFocus();
+            return;
+        }
 
-            registerUser(nameSt,phNumSt,emailSt,pwdSt);
+        if(pwdSt.isEmpty()){
+            pwd.setError("Password is mandatory");
+            pwd.requestFocus();
+            return;
+        }
+        if(!Patterns.EMAIL_ADDRESS.matcher(emailSt).matches()){
+            email.setError("Please Enter a valid Email ID");
+            email.requestFocus();
+            return;
+        }
+        if(pwdSt.length() < 6){
+            pwd.setError("Password Must be longer than 6 characters");
+            pwd.requestFocus();
+            return;
+        }
+        if(!pwdSt.equals(pwdcmfSt)){
+            pwdcmf.setError("Passwords do not match");
+            pwdcmf.requestFocus();
 
         }
         else {
-            TextView err= (TextView) this.findViewById(R.id.errorTextView);
-            err.setText("Passwords do not match");
-            err.setVisibility(View.VISIBLE);
+            registerUser(nameSt,phNumSt,emailSt,pwdSt);
 
         }
     }
-
-    //TODO : Register User (Add Firebase )
+    String uid;
+    //TODO : Register User (Add Firebase)
     private void registerUser(String name,String phNum,String email,String passWord)
     {
         pref=getApplicationContext().getSharedPreferences("Paper Empower",0);
@@ -183,8 +219,32 @@ public class LandingPage extends AppCompatActivity {
         Log.d("Motherfucking tag",name+phNum+email+passWord);
         editor.putString(key,val);
         editor.commit();
-        Intent i=new Intent(this,RegisterOrCollect.class);
-        startActivity(i);
+        progressDialog.setMessage("Signing up user");
+        progressDialog.show();
+        fbaseauth.createUserWithEmailAndPassword(email,passWord).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    //Add User Details to Database
+                    uid = fbaseauth.getUid();
+                    UsersInfo usersInfo = new UsersInfo(nameSt,emailSt,phNumSt);
+                    usersref.child(uid).setValue(usersInfo);
+                    Toast.makeText(LandingPage.this,"User Registered Successfully!!!",Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(LandingPage.this, RegisterOrCollect.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+                else if(task.getException() instanceof FirebaseAuthUserCollisionException){
+                    Toast.makeText(LandingPage.this,"User Already Exists",Toast.LENGTH_LONG).show();
+                    progressDialog.cancel();
+                }
+                else{
+                    Toast.makeText(LandingPage.this,"User Registration Failed!!!",Toast.LENGTH_LONG).show();
+                    progressDialog.cancel();
+                }
+            }
+        });
+
     }
 
 }
