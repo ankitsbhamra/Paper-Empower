@@ -43,5 +43,52 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(marker3).title("Marker 3"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(marker3));
 
+        /*Map<String, Marker> markers = new HashMap();
+
+ref.addChildEventListener(new ChildEventListener() {
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        UsersActive uA = dataSnapshot.getValue(UsersActive.class);
+
+        Marker uAmarker = mMap.addMarker(markerOptions);
+        markers.put(dataSnapshot.getKey(), uAmarker);
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        UsersActive uA = dataSnapshot.getValue(UsersActive.class);
+
+            if (markers.contains(dataSnapshot.getKey())) {
+            Marker marker = markers.get(dataSnapshot.getKey());
+
+            marker.remove();
+            // or
+            // marker.setPosition(newPosition);
+        }
+
+        Marker uAmarker = mMap.addMarker(markerOptions);
+        markers.put(dataSnapshot.getKey(), uAmarker);
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+        if (markers.contains(dataSnapshot.getKey())) {
+            Marker marker = markers.get(dataSnapshot.getKey());
+            marker.remove();
+        }
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+
+    }
+
+});
+*/
     }
 }
