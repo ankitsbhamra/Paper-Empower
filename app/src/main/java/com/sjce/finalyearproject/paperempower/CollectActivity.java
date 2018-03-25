@@ -1,5 +1,6 @@
 package com.sjce.finalyearproject.paperempower;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +35,7 @@ public class CollectActivity extends AppCompatActivity {
             public void onClick(View v){
                 Log.d("Motherfucking tag","Inside collectButton onclick listener");
                 validateClick();
+                collectevent(v);
 
             }
         });
@@ -132,10 +134,16 @@ public class CollectActivity extends AppCompatActivity {
 
     }
 
+
+
     void sendData()
     {
 
 //        TODO: Implementation to send data from latCheckedArr and longCheckedArr to mapsActivity and launch mapsActivity
 
+    }
+    public void collectevent(View v){
+        Intent i=new Intent(this,MapsActivity.class);
+        startActivity(i);
     }
 }
