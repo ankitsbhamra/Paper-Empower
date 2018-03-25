@@ -94,15 +94,29 @@ public class RegisterNewUser extends AppCompatActivity {
 
 
     }
-
+    //TODO:App was crashing if register house clicked before getting coordinates,fixed by setting sentinel values
     public void registerHouse(){
         zipcode = (EditText) this.findViewById(R.id.zipcodeEditText);
         name = (EditText) this.findViewById(R.id.nameEditText);
         number = (EditText) this.findViewById(R.id.phNumberEditText);
         address = (EditText) this.findViewById(R.id.addressEditText);
         //TODO: Check if lat and Lon are empty
-        Double lat = Double.parseDouble(latitude.toString().trim());
-        Double lon = Double.parseDouble(longitude.toString().trim());
+        double lat=-999;
+        double lon=-999;
+        String latitudeStr;
+        String longitudeStr;
+        latitudeStr = (String) latitude.getText();
+        latitudeStr=latitudeStr.trim();
+        longitudeStr = (String) longitude.getText();
+        longitudeStr=longitudeStr.trim();
+        Log.d("Motherfucking tag 1",latitudeStr);
+        Log.d("Motherfucking tag 2",longitudeStr);
+
+        if(!latitudeStr.equals("Latitude:")&&!longitudeStr.equals("Longitude:"))
+        {
+            lat=Double.parseDouble(latitudeStr.substring(4));
+            lon=Double.parseDouble(longitudeStr.substring(4));
+        }
         String zip = zipcode.toString().trim();
         String fullname = name.toString().trim();
         String addr = address.toString().trim();
@@ -125,6 +139,11 @@ public class RegisterNewUser extends AppCompatActivity {
         if(num.isEmpty()){
             number.setError("Phone Number Cannot Be Empty");
             number.requestFocus();
+            return;
+        }
+        if(lat==-999||lon==-999)
+        {
+            Toast.makeText(this,"Coordinates could not be registered, please try again",Toast.LENGTH_LONG).show();
             return;
         }
         String key = housesref.push().getKey();
@@ -206,9 +225,15 @@ public class RegisterNewUser extends AppCompatActivity {
             locationListener=new LocationListener() {
                 @Override
                 public void onLocationChanged(Location loc) {
-                    String longitude = "Longitude: " +loc.getLongitude();
+                    String longSt= String.valueOf(loc.getLongitude());
+                    if(longSt.length()>6)
+                    longSt=longSt.substring(0,6);
+                    String longitude = "Longitude: " +longSt;
                     Log.d(TAG, longitude);
-                    String latitude = "Latitude: " +loc.getLatitude();
+                    String latSt= String.valueOf(loc.getLatitude());
+                    if(latSt.length()>6)
+                    latSt=latSt.substring(0,6);
+                    String latitude = "Latitude: " +latSt;
                     Log.d(TAG, latitude);
 
                     //*----------to get City-Name from coordinates ------------- *//*
@@ -259,8 +284,14 @@ public class RegisterNewUser extends AppCompatActivity {
                     Log.d(TAG, "loc is null");
                 else{
                     Log.d(TAG, "Value of loc:"+String.valueOf(loc.getLatitude()));
-                    latitude.setText("Lat:"+loc.getLatitude());
-                    longitude.setText("Lon:"+loc.getLongitude());
+                    String latSt= String.valueOf(loc.getLatitude());
+                    if(latSt.length()>6)
+                        latSt=latSt.substring(0,6);
+                    latitude.setText("Lat:"+latSt);
+                    String longSt= String.valueOf(loc.getLongitude());
+                    if(longSt.length()>6)
+                        longSt=longSt.substring(0,6);
+                    longitude.setText("Lon:"+longSt);
                 }
             }
 

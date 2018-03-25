@@ -83,6 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:text="Longitude:"
+
             android:textSize="15sp"
             android:id="@+id/lon"
             android:textColor="@color/colorBlack"
@@ -95,6 +96,8 @@
         android:layout_height="wrap_content"
         android:text="Get coordinates"
         android:id="@+id/getCoordinatesButton"
+        android:theme="@style/MyButton"
+        android:textColor="#ffffff"
 
         />
     <Button
@@ -102,7 +105,8 @@
         android:layout_height="wrap_content"
         android:text="Register House"
         android:id="@+id/registerHouseButton"
-
+        android:theme="@style/MyButton"
+        android:textColor="#ffffff"
         />
 </LinearLayout>
 

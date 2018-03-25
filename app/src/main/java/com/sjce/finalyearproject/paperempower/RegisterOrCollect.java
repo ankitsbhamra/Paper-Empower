@@ -40,7 +40,8 @@ public class RegisterOrCollect extends AppCompatActivity {
     }
 
     public void collectEvent(View v){
-        Intent i=new Intent(this,MapsActivity.class);
+//        Intent i=new Intent(this,MapsActivity.class); TODO:CHANGE HERE
+        Intent i=new Intent(this,CollectActivity.class);
         startActivity(i);
 
     }
