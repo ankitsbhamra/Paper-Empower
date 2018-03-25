@@ -88,7 +88,6 @@ public class LandingPage extends AppCompatActivity {
         });
     }
     LinearLayout signUpLL;
-    TextView cnfmpwdtv;
     TextView cnfmpwdet;
     Button btn;
     Button btn2;
@@ -130,9 +129,8 @@ public class LandingPage extends AppCompatActivity {
                     return;
 
                 } else if (task.getException() instanceof FirebaseAuthInvalidUserException) {
-
+                    Log.d("Motherfucking tag","Inside invalid user");
                     progressDialog.cancel();
-                    cnfmpwdtv.setVisibility(View.VISIBLE);
                     cnfmpwdet.setVisibility(View.VISIBLE);
                     signUpLL.setVisibility(View.VISIBLE);
 //            btn.setText("Sign Up");
@@ -143,7 +141,7 @@ public class LandingPage extends AppCompatActivity {
                 else{
                     progressDialog.cancel();
                     pwd.requestFocus();
-                    pwd.setError("The email id is not registered");
+                    pwd.setError("The Password Entered Is Incorrect");
                 }
             }
         });
