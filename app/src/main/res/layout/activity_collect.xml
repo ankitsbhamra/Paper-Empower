@@ -38,6 +38,9 @@
             android:layout_gravity="center_horizontal"
             android:text="Collect"
             android:id="@+id/collectButton"
+            android:theme="@style/MyButton"
+            android:textColor="#ffffff"
+            android:layout_margin="20dp"
             />
 
 

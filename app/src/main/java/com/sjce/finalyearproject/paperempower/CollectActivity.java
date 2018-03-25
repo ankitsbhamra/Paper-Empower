@@ -72,8 +72,10 @@ public class CollectActivity extends AppCompatActivity {
 
             TextView tv=new TextView(this);
             tv.setText(text);
-            tv.setTextSize(24);
+            tv.setTextSize(22);
+//            tv.setTextColor(0xffffff);
             LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
+            lp.setMargins(0,10,0,10);
             tv.setLayoutParams(lp);
             tv.setId(tvId);
             tvId++;
@@ -103,14 +105,14 @@ public class CollectActivity extends AppCompatActivity {
                 }
             });
             cbId++;
-
+            cb.setText(text);
             LinearLayout ll=new LinearLayout(this);
             ll.setLayoutParams(lp);
             ll.setId(llId);
             llId++;
 
             ll.addView(cb);
-            ll.addView(tv);
+//            ll.addView(tv);
 
             mainLL.addView(ll);
         }
@@ -133,7 +135,7 @@ public class CollectActivity extends AppCompatActivity {
     void sendData()
     {
 
-//        TODO: Implementation to send data from latCheckedArr and longCheckedArr to mapsActivity
+//        TODO: Implementation to send data from latCheckedArr and longCheckedArr to mapsActivity and launch mapsActivity
 
     }
 }

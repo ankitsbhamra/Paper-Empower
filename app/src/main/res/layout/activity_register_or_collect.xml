@@ -17,6 +17,8 @@
         android:layout_gravity="center_horizontal"
         android:id="@+id/registerButton"
         android:layout_margin="10dp"
+        android:theme="@style/MyButton"
+        android:textColor="#ffffff"
         />
 
     <Button
@@ -27,6 +29,8 @@
         android:layout_gravity="center_horizontal"
         android:id="@+id/collectButton"
         android:layout_margin="10dp"
+        android:theme="@style/MyButton"
+        android:textColor="#ffffff"
         />
 
 </LinearLayout>
