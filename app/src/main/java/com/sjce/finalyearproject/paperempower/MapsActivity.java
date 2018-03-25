@@ -25,6 +25,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Button btnReg= (Button) this.findViewById(R.id.collectButton);
     }
 
+    //TODO: get lat and long from registered data - firebase
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
