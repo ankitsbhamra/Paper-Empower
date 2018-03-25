@@ -63,6 +63,8 @@ public class LandingPage extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         pref=getApplicationContext().getSharedPreferences("Paper Empower",0);
         SharedPreferences.Editor editor=pref.edit();
+//        Intent in=new Intent(this,RegisterOrCollect.class);//TODO: Remove this
+//        startActivity(in);//TODO: Remove this
         if(pref.getString(key,"false").equals(val))
         {
             Log.d("Motherfucking tag","Inside sharedPref if");

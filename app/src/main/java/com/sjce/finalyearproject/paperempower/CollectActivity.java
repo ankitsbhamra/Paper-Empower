@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.Console;
 import java.util.ArrayList;
@@ -19,8 +20,8 @@ import java.util.List;
 public class CollectActivity extends AppCompatActivity {
 
     List<HousesInfo> arr=new ArrayList<HousesInfo>();
-    Dictionary latCheckedArr=new Hashtable();
-    Dictionary longCheckedArr=new Hashtable();
+    Dictionary latCheckedArr=new Hashtable();//Dictionary storing key:latitude value
+    Dictionary longCheckedArr=new Hashtable();//Dictionary storing key:longitude value
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +33,7 @@ public class CollectActivity extends AppCompatActivity {
         collectButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 Log.d("Motherfucking tag","Inside collectButton onclick listener");
+                validateClick();
 
             }
         });
@@ -42,6 +44,9 @@ public class CollectActivity extends AppCompatActivity {
 
         //TODO: populate arr with data from firebase
         HousesInfo hi=new HousesInfo("asdsad","asdsada","23431234","21312312",123.34,345.1,"asdasdsad");
+        arr.add(hi);
+        arr.add(hi);
+        arr.add(hi);
         arr.add(hi);
         arr.add(hi);
         arr.add(hi);
@@ -59,7 +64,7 @@ public class CollectActivity extends AppCompatActivity {
     void createElements(List<HousesInfo> arr)
     {
 
-        LinearLayout mainLL= (LinearLayout) this.findViewById(R.id.scrollViewLL);
+        LinearLayout mainLL= (LinearLayout) this.findViewById(R.id.scrollViewInsideLL);
         for(HousesInfo hi:arr)
         {
             String text="";
@@ -74,7 +79,8 @@ public class CollectActivity extends AppCompatActivity {
             tvId++;
 
             CheckBox cb=new CheckBox(this);
-            contentDict.put(cb.toString(),hi);
+            contentDict.put(cb.hashCode(),hi);
+            Log.d("Motherfucking tag", String.valueOf(cb.hashCode()));
 
             cb.setId(cbId);
             cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
@@ -85,11 +91,12 @@ public class CollectActivity extends AppCompatActivity {
                     if ( isChecked )
                     {
                         // perform logic
-                        HousesInfo houInf= (HousesInfo) contentDict.get(buttonView.toString());
+                        HousesInfo houInf= (HousesInfo) contentDict.get(buttonView.hashCode());
+                        Log.d("Motherfucking tag", String.valueOf(buttonView.hashCode()));
                         latCheckedArr.put(houInf.key,houInf.latitude);
-                        latCheckedArr.put(houInf.key,houInf.longitude);
+                        longCheckedArr.put(houInf.key,houInf.longitude);
 
-                        Log.d("Motherfucking tag", String.valueOf(houInf.latitude));
+                        Log.d("Motherfucking tag", String.valueOf(longCheckedArr.get(houInf.key)));
 
                     }
 
@@ -102,13 +109,31 @@ public class CollectActivity extends AppCompatActivity {
             ll.setId(llId);
             llId++;
 
-            ll.addView(tv);
             ll.addView(cb);
+            ll.addView(tv);
+
             mainLL.addView(ll);
         }
 
     }
 
 
+    void validateClick()
+    {
 
+        if(latCheckedArr.isEmpty()&&longCheckedArr.isEmpty())
+            Toast.makeText(this,"Please select houses to visit",Toast.LENGTH_LONG).show();
+        else
+        {
+            sendData();
+        }
+
+    }
+
+    void sendData()
+    {
+
+//        TODO: Implementation to send data from latCheckedArr and longCheckedArr to mapsActivity
+
+    }
 }
