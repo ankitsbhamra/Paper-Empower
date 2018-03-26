@@ -8,34 +8,57 @@
     android:orientation="vertical"
     tools:context="com.sjce.finalyearproject.paperempower.RegisterOrCollect">
 
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:text="WELCOME!"
-        />
+        android:layout_gravity="top|left"
+        android:layout_margin="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        android:gravity="top|left"
+        android:padding="50dp"
+        android:paddingBottom="50dp"
+        android:text="WELCOME xyz!"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textSize="24sp" />
+
     <Button
 
         android:id="@+id/registerButton"
-        android:textSize="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="30dp"
-        android:text="register"
+        android:text=" register "
         android:textColor="#ffffff"
+        android:textSize="30dp"
         android:theme="@style/MyButton" />
 
     <Button
 
         android:id="@+id/collectButton"
-        android:textSize="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="30dp"
-        android:text="collect"
+        android:text="  collect "
         android:textColor="#ffffff"
+        android:textSize="30dp"
+        android:theme="@style/MyButton" />
+
+
+    <Button
+
+        android:id="@+id/logoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="60dp"
+        android:text="Logout"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="#ffffff"
+        android:textSize="20dp"
         android:theme="@style/MyButton" />
 
 </LinearLayout>

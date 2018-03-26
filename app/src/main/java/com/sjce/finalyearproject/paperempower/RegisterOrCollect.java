@@ -12,8 +12,7 @@ import android.widget.Button;
 
 public class RegisterOrCollect extends AppCompatActivity {
 
-    //TODO: Add Logout Button
-    //TODO: Add Volunteer name at the top
+    //TODO: Import volunteer name after welcome
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
