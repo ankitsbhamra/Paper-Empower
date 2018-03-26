@@ -27,6 +27,8 @@ import java.util.List;
 public class CollectActivity extends AppCompatActivity {
 
     List<HousesInfo> arr=new ArrayList<HousesInfo>();
+    int ctr=0;
+
     //List<HousesInfo> arr1=new ArrayList<HousesInfo>();
 
     ArrayList<String> arr2 = new ArrayList<String>();
@@ -57,22 +59,36 @@ public class CollectActivity extends AppCompatActivity {
 
 
     void populateArrayList() {
-        super.onStart();
+
         houses.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                //size = dataSnapshot.getChildrenCount();
                 for(DataSnapshot housesSnapshot:dataSnapshot.getChildren()){
+                    //HousesInfo housesInfo = new HousesInfo();
+                    /*
+                    housesInfo.setAddress(housesSnapshot.getValue(HousesInfo.class).getAddress());
+                    housesInfo.setFullname(housesSnapshot.getValue(HousesInfo.class).getFullname());
+                    housesInfo.setPhonenumber(housesSnapshot.getValue(HousesInfo.class).getPhonenumber());
+                    housesInfo.setZipcode(housesSnapshot.getValue(HousesInfo.class).getZipcode());
+                    housesInfo.setLatitude(housesSnapshot.getValue(HousesInfo.class).getLatitude());
+                    housesInfo.setLongitude(housesSnapshot.getValue(HousesInfo.class).getLongitude());
+                    */
                     arr.add(housesSnapshot.getValue(HousesInfo.class));
-
+                    Log.d("Motherfuckingtag", String.valueOf(arr.get(ctr).zipcode));
+                    ctr++;
                 }
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Toast.makeText(CollectActivity.this,"Unable to read from Database",Toast.LENGTH_LONG);
             }
         });
+
+
+
     }
 
 
@@ -97,7 +113,7 @@ public class CollectActivity extends AppCompatActivity {
     List<String> contentList=new ArrayList<String>();
     Dictionary contentDict=new Hashtable();
 
-
+    //TODO: NOT DISPLAYING THE HOUSES
     void createElements(List<HousesInfo> arr)
     {
 
@@ -105,6 +121,7 @@ public class CollectActivity extends AppCompatActivity {
         for(HousesInfo hi:arr)
         {
             String text="";
+            Log.d("Motherfucking tag","Inside Create Elements");//NOT ENTERING HERE
             text=text+"Name:"+hi.fullname+"\nAddress:"+hi.address+"\nPhone Number:"+hi.phonenumber;
 
             TextView tv=new TextView(this);
@@ -132,7 +149,7 @@ public class CollectActivity extends AppCompatActivity {
                         // perform logic
                         HousesInfo houInf= (HousesInfo) contentDict.get(buttonView.hashCode());
                         Log.d("Motherfucking tag", String.valueOf(buttonView.hashCode()));
-                        arr2.add(houInf.key);//Populating arr2 with keys of selected houses
+                        arr2.add(houInf.key);//Populating arr2 with only keys of selected houses
                         /*
                         latCheckedArr.put(houInf.key,houInf.latitude);
                         longCheckedArr.put(houInf.key,houInf.longitude);

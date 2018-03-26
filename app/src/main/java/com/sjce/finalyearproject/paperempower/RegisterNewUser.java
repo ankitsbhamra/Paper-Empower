@@ -118,18 +118,18 @@ public class RegisterNewUser extends AppCompatActivity {
             lon=Double.parseDouble(longitudeStr.substring(4));
         }
         //TODO: String values are not getting extracted from Edit Texts. Being Stored in some weird format in FireBase
-        String zip = String.valueOf(zipcode);
-        String fullname = String.valueOf(name);
-        String addr = String.valueOf(address);
-        String num = String.valueOf(number);
+        String zip = zipcode.getText().toString().trim();
+        String fullname = name.getText().toString().trim();
+        String addr = address.getText().toString().trim();
+        String num = number.getText().toString().trim();
         Log.d("Motherfucking tag",fullname);
         if(fullname.isEmpty()){
             name.setError("Name Cannot Be Empty");
             name.requestFocus();
             return;
         }
-        if(zip.isEmpty()){
-            zipcode.setError("Zip Code Cannot Be Empty");
+        if((zip.isEmpty())||(zip.length()!=6)){
+            zipcode.setError("Zip Code Must Be 6 digits");
             zipcode.requestFocus();
             return;
         }
@@ -138,7 +138,7 @@ public class RegisterNewUser extends AppCompatActivity {
             address.requestFocus();
             return;
         }
-        if((num.isEmpty())){
+        if((num.isEmpty())||(num.length()!=10)){
             number.setError("Phone Number Must Be 10 Digits");
             number.requestFocus();
             return;
@@ -152,6 +152,8 @@ public class RegisterNewUser extends AppCompatActivity {
         HousesInfo housesInfo = new HousesInfo(fullname,addr,num,zip,lat,lon,key);
         housesref.child("houses").child(key).setValue(housesInfo);
         Toast.makeText(RegisterNewUser.this, "House Registered!", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(RegisterNewUser.this,RegisterOrCollect.class);
+        startActivity(intent);
     }
 
 
