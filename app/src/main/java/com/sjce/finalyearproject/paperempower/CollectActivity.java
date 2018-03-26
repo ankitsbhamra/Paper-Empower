@@ -12,6 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.Console;
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -21,13 +27,18 @@ import java.util.List;
 public class CollectActivity extends AppCompatActivity {
 
     List<HousesInfo> arr=new ArrayList<HousesInfo>();
+    //List<HousesInfo> arr1=new ArrayList<HousesInfo>();
+
+    ArrayList<String> arr2 = new ArrayList<String>();
     Dictionary latCheckedArr=new Hashtable();//Dictionary storing key:latitude value
     Dictionary longCheckedArr=new Hashtable();//Dictionary storing key:longitude value
+    DatabaseReference houses;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collect);
         LinearLayout scrollViewLL= (LinearLayout) this.findViewById(R.id.scrollViewLL);
+        houses = FirebaseDatabase.getInstance().getReference("houses");
         populateArrayList();
         createElements(arr);
         Button collectButton= (Button) this.findViewById(R.id.collectButton);
@@ -41,10 +52,34 @@ public class CollectActivity extends AppCompatActivity {
         });
     }
 
-    void populateArrayList()
-    {
 
-        //TODO: populate arr with data from firebase
+
+
+
+    void populateArrayList() {
+        super.onStart();
+        houses.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot housesSnapshot:dataSnapshot.getChildren()){
+                    arr.add(housesSnapshot.getValue(HousesInfo.class));
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+
+
+
+        /*
         HousesInfo hi=new HousesInfo("asdsad","asdsada","23431234","21312312",123.34,345.1,"asdasdsad");
         arr.add(hi);
         arr.add(hi);
@@ -52,9 +87,9 @@ public class CollectActivity extends AppCompatActivity {
         arr.add(hi);
         arr.add(hi);
         arr.add(hi);
+        */
 
 
-    }
 
     int cbId=1000;
     int tvId=2000;
@@ -97,9 +132,11 @@ public class CollectActivity extends AppCompatActivity {
                         // perform logic
                         HousesInfo houInf= (HousesInfo) contentDict.get(buttonView.hashCode());
                         Log.d("Motherfucking tag", String.valueOf(buttonView.hashCode()));
+                        arr2.add(houInf.key);//Populating arr2 with keys of selected houses
+                        /*
                         latCheckedArr.put(houInf.key,houInf.latitude);
                         longCheckedArr.put(houInf.key,houInf.longitude);
-
+                        */
                         Log.d("Motherfucking tag", String.valueOf(longCheckedArr.get(houInf.key)));
 
                     }
@@ -127,23 +164,25 @@ public class CollectActivity extends AppCompatActivity {
 
         if(latCheckedArr.isEmpty()&&longCheckedArr.isEmpty())
             Toast.makeText(this,"Please select houses to visit",Toast.LENGTH_LONG).show();
-        else
+        /*else
         {
-            sendData();
-        }
 
+        }
+        */
     }
 
 
-
-    void sendData()
+    /*
+    void sendData()//NOT REQUIRED. DONE IT INSIDE if(isChecked)
     {
 
 //        TODO: Implementation to send data from latCheckedArr and longCheckedArr to mapsActivity and launch mapsActivity
 
     }
+    */
     public void collectevent(View v){
         Intent i=new Intent(this,MapsActivity.class);
+        i.putExtra("keyList",arr2);//Passing list of keys of selected house to MapsActivity
         startActivity(i);
     }
 }

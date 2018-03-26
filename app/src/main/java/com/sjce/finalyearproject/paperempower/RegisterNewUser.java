@@ -60,7 +60,7 @@ public class RegisterNewUser extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_new_user);
-        housesref = FirebaseDatabase.getInstance().getReference("houses");
+        housesref = FirebaseDatabase.getInstance().getReference();
         ll = (LinearLayout) this.findViewById(R.id.coordinatesLinearLayout);
         latitude = (TextView) this.findViewById(R.id.lat);
         longitude = (TextView) this.findViewById(R.id.lon);
@@ -117,10 +117,12 @@ public class RegisterNewUser extends AppCompatActivity {
             lat=Double.parseDouble(latitudeStr.substring(4));
             lon=Double.parseDouble(longitudeStr.substring(4));
         }
-        String zip = zipcode.toString().trim();
-        String fullname = name.toString().trim();
-        String addr = address.toString().trim();
-        String num = number.toString().trim();
+        //TODO: String values are not getting extracted from Edit Texts. Being Stored in some weird format in FireBase
+        String zip = String.valueOf(zipcode);
+        String fullname = String.valueOf(name);
+        String addr = String.valueOf(address);
+        String num = String.valueOf(number);
+        Log.d("Motherfucking tag",fullname);
         if(fullname.isEmpty()){
             name.setError("Name Cannot Be Empty");
             name.requestFocus();
@@ -136,8 +138,8 @@ public class RegisterNewUser extends AppCompatActivity {
             address.requestFocus();
             return;
         }
-        if(num.isEmpty()){
-            number.setError("Phone Number Cannot Be Empty");
+        if((num.isEmpty())){
+            number.setError("Phone Number Must Be 10 Digits");
             number.requestFocus();
             return;
         }
@@ -146,9 +148,9 @@ public class RegisterNewUser extends AppCompatActivity {
             Toast.makeText(this,"Coordinates could not be registered, please try again",Toast.LENGTH_LONG).show();
             return;
         }
-        String key = housesref.push().getKey();
+        String key = housesref.child("houses").push().getKey();
         HousesInfo housesInfo = new HousesInfo(fullname,addr,num,zip,lat,lon,key);
-        housesref.child(key).setValue(housesInfo);
+        housesref.child("houses").child(key).setValue(housesInfo);
         Toast.makeText(RegisterNewUser.this, "House Registered!", Toast.LENGTH_LONG).show();
     }
 

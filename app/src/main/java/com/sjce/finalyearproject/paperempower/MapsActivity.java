@@ -2,6 +2,7 @@ package com.sjce.finalyearproject.paperempower;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -10,10 +11,21 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+
+    List<HousesInfo> housesInfo = new ArrayList<HousesInfo>();//LIST THAT CONTAINS ALL THE SELECTED HOUSES
+    DatabaseReference houses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +34,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        houses = FirebaseDatabase.getInstance().getReference("houses");
+        final ArrayList<String> keyList = (ArrayList<String>) getIntent().getSerializableExtra("keyList");
+        houses.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds:dataSnapshot.getChildren()){
+                    HousesInfo hi = ds.getValue(HousesInfo.class);
+                    if(keyList.contains(hi.key)){
+                        housesInfo.add(hi);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        //housesInfo populated with selected houses
+        //Log.d("Motherfucking tag", keyList);
+
         Button btnReg= (Button) this.findViewById(R.id.collectButton);
     }
 
