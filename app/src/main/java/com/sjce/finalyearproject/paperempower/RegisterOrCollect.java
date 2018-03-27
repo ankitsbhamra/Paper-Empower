@@ -1,6 +1,7 @@
 package com.sjce.finalyearproject.paperempower;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,6 +13,7 @@ import android.widget.Button;
 
 public class RegisterOrCollect extends AppCompatActivity {
 
+    SharedPreferences pref;
     //TODO: Import volunteer name after welcome
     @Override
     protected void onCreate(Bundle savedInstanceState) {

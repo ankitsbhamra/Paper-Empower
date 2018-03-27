@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -51,7 +52,7 @@ public class RegisterNewUser extends AppCompatActivity {
     LocationListener locationListener;
     double lat, lng;
     DatabaseReference housesref;
-
+    SharedPreferences pref;
 
     private static final String TAG = "Motherfucking tag";
     private Boolean flag = false;
@@ -94,13 +95,13 @@ public class RegisterNewUser extends AppCompatActivity {
 
 
     }
-    //TODO:App was crashing if register house clicked before getting coordinates,fixed by setting sentinel values
+    //App was crashing if register house clicked before getting coordinates,fixed by setting sentinel values
     public void registerHouse(){
         zipcode = (EditText) this.findViewById(R.id.zipcodeEditText);
         name = (EditText) this.findViewById(R.id.nameEditText);
         number = (EditText) this.findViewById(R.id.phNumberEditText);
         address = (EditText) this.findViewById(R.id.addressEditText);
-        //TODO: Check if lat and Lon are empty
+
         double lat=-999;
         double lon=-999;
         String latitudeStr;

@@ -41,8 +41,12 @@ public class CollectActivity extends AppCompatActivity {
         setContentView(R.layout.activity_collect);
         LinearLayout scrollViewLL= (LinearLayout) this.findViewById(R.id.scrollViewLL);
         houses = FirebaseDatabase.getInstance().getReference("houses");
+        Log.d("Motherfucking tag","Entering populateArrayList");
         populateArrayList();
-        createElements(arr);
+        /*Log.d("Motherfucking tag","Entering createElements");
+        createElements();*/
+        Log.d("Motherfucking tag","Exiting createElements");
+
         Button collectButton= (Button) this.findViewById(R.id.collectButton);
         collectButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -75,9 +79,11 @@ public class CollectActivity extends AppCompatActivity {
                     housesInfo.setLongitude(housesSnapshot.getValue(HousesInfo.class).getLongitude());
                     */
                     arr.add(housesSnapshot.getValue(HousesInfo.class));
+                    Log.d("Motherfucking tag", String.valueOf(arr.size()));
                     Log.d("Motherfuckingtag", String.valueOf(arr.get(ctr).zipcode));
                     ctr++;
                 }
+                createElements();
 
             }
 
@@ -114,10 +120,11 @@ public class CollectActivity extends AppCompatActivity {
     Dictionary contentDict=new Hashtable();
 
     //TODO: NOT DISPLAYING THE HOUSES
-    void createElements(List<HousesInfo> arr)
+    void createElements()
     {
-
+        Log.d("Motherfucking tag","Inside Create elements");
         LinearLayout mainLL= (LinearLayout) this.findViewById(R.id.scrollViewInsideLL);
+        Log.d("Motherfucking tag", String.valueOf(arr.size()));
         for(HousesInfo hi:arr)
         {
             String text="";
@@ -200,6 +207,7 @@ public class CollectActivity extends AppCompatActivity {
     public void collectevent(View v){
         Intent i=new Intent(this,MapsActivity.class);
         i.putExtra("keyList",arr2);//Passing list of keys of selected house to MapsActivity
+
         startActivity(i);
     }
 }

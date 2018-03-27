@@ -19,9 +19,9 @@
         android:gravity="top|left"
         android:padding="50dp"
         android:paddingBottom="50dp"
-        android:text="WELCOME xyz!"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:id="@+id/usernameTextView"/>
 
     <Button
 

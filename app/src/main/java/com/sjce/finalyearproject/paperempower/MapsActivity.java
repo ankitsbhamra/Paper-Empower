@@ -43,6 +43,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     HousesInfo hi = ds.getValue(HousesInfo.class);
                     if(keyList.contains(hi.key)){
                         housesInfo.add(hi);
+                        Log.d("Motherfucking tag",hi.fullname);
                     }
                 }
             }
