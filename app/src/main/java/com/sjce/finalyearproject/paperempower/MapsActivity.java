@@ -29,6 +29,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     List<HousesInfo> housesInfo = new ArrayList<HousesInfo>();//LIST THAT CONTAINS ALL THE SELECTED HOUSES
     DatabaseReference houses;
+    int ctr = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+
         houses = FirebaseDatabase.getInstance().getReference("houses");
         final ArrayList<String> keyList = (ArrayList<String>) getIntent().getSerializableExtra("keyList");
         houses.addValueEventListener(new ValueEventListener() {
@@ -46,7 +47,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     HousesInfo hi = ds.getValue(HousesInfo.class);
                     if(keyList.contains(hi.key)){
                         housesInfo.add(hi);
-                        Log.d("Motherfucking tag",hi.fullname);
+                        //Log.d("Motherfucking tag",String.valueOf(housesInfo.get(ctr).latitude));
+                        ctr++;
                     }
                 }
             }
@@ -58,7 +60,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
         //housesInfo populated with selected houses
         //Log.d("Motherfucking tag", keyList);
-
+        mapFragment.getMapAsync(this);
         Button btnReg= (Button) this.findViewById(R.id.collectButton);
     }
 
@@ -217,19 +219,25 @@ protected Object doInBackground(Object... params) {
     public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnPolylineClickListener, GoogleMap.OnPolygonClickListener {
 */
-    public void onMapReady(GoogleMap googleMap) {
-        Log.d("Motherfucking tag","Inside onMapReady");
-        mMap = googleMap;
 
-        for(HousesInfo hi:housesInfo){
 
-            LatLng marker = new LatLng(hi.latitude, hi.longitude);
-            Log.d("Motherfucking tag", String.valueOf(hi.latitude));
-            Log.d("Motherfucking tag", String.valueOf(hi.longitude));
-            mMap.addMarker(new MarkerOptions().position(marker).title(hi.phonenumber));
+    public void addMarkers(){
+        Log.d("Motherfucking tag",housesInfo.get(0).fullname);
+
+        for(int i=0;i<housesInfo.size();i++){
+
+            LatLng marker = new LatLng(housesInfo.get(i).latitude, housesInfo.get(i).longitude);
+            Log.d("Motherfucking tag", String.valueOf(housesInfo.get(i).latitude));
+            Log.d("Motherfucking tag", String.valueOf(housesInfo.get(i).longitude));
+            mMap.addMarker(new MarkerOptions().position(marker).title(housesInfo.get(i).phonenumber));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
 
         }
+    }
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        addMarkers();
+
         /*LatLng marker1 = new LatLng(12.3369598, 76.5904817);
         mMap.addMarker(new MarkerOptions().position(marker1).title("Marker 1"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(marker1));
