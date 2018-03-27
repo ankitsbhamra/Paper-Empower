@@ -65,12 +65,19 @@ public class LandingPage extends AppCompatActivity {
         SharedPreferences.Editor editor=pref.edit();
 //        Intent in=new Intent(this,RegisterOrCollect.class);//TODO: Remove this
 //        startActivity(in);//TODO: Remove this
-        if(pref.getString(key,"false").equals(val))
+        /*SHARED PREFERENCES NOT WORKING PROPERLY
+        if(pref.getString(key,"false").equals("val"))
         {
             Log.d("Motherfucking tag","Inside sharedPref if");
             Intent i=new Intent(this,RegisterOrCollect.class);
             startActivity(i);
             return;
+        }
+        *///REPLACES SHARED PREFERENCES
+        if (fbaseauth.getCurrentUser()!=null){
+            Intent i = new Intent(LandingPage.this,RegisterOrCollect.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
         }
         Button btn= (Button) this.findViewById(R.id.next2);
         btn.setOnClickListener(new View.OnClickListener(){

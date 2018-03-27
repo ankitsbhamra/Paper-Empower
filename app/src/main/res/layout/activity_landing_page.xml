@@ -4,116 +4,107 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sjce.finalyearproject.paperempower.LandingPage"
-    android:orientation="vertical"
-    >
+    tools:context="com.sjce.finalyearproject.paperempower.LandingPage">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/SignUp"
-            android:padding="10dp"
-            android:visibility="gone"
-            >
 
-            <EditText
+            <LinearLayout
+                android:id="@+id/SignUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Full Name"
-                android:textColor="@color/colorBlack"
-                android:id="@+id/nameEditText"
-                />
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/nameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Full Name"
+                    android:textColor="@color/colorBlack" />
 
 
+                <EditText
+                    android:id="@+id/phNumberEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Phone Number"
+                    android:textColor="@color/colorBlack" />
+            </LinearLayout>
 
-            <EditText
+            <LinearLayout
+                android:id="@+id/Login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Phone Number"
-                android:textColor="@color/colorBlack"
-                android:id="@+id/phNumberEditText"
-                />
-        </LinearLayout>
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical"
+                android:padding="10dp"
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/Login"
-            android:padding="10dp"
-            android:layout_gravity="center_vertical"
+                >
 
-            >
+                <EditText
+                    android:id="@+id/emailIdEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Email Id"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="24sp" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Email Id"
-            android:textSize="24sp"
-            android:textColor="@color/colorBlack"
-            android:id="@+id/emailIdEditText"
-            />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="Password"
-                android:textSize="24sp"
-                android:textColor="@color/colorBlack"
-                android:id="@+id/passwordEditText"
-                />
+                <EditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="24sp" />
 
 
+                <EditText
+                    android:id="@+id/confirmPasswordEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Confirm Password"
+                    android:inputType="textPassword"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="24sp"
+                    android:visibility="gone" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="Confirm Password"
-                android:textSize="24sp"
-                android:textColor="@color/colorBlack"
-                android:id="@+id/confirmPasswordEditText"
-                android:visibility="gone"
-                />
+                <TextView
+                    android:id="@+id/errorTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Error Message"
+                    android:textColor="@color/colorRed"
+                    android:visibility="gone" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:text="Error Message"
-                android:id="@+id/errorTextView"
-                android:textColor="@color/colorRed"/>
+                <Button
+                    android:id="@+id/nextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Next"
+                    android:textColor="#ffffff"
+                    android:theme="@style/MyButton" />
+
+            </LinearLayout>
 
             <Button
+                android:id="@+id/next2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Next"
-                android:id="@+id/nextButton"
-                android:theme="@style/MyButton"
+                android:text="Sign Up"
                 android:textColor="#ffffff"
-                />
-
-        </LinearLayout>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Sign Up"
-            android:id="@+id/next2"
-            android:visibility="gone"
-            android:theme="@style/MyButton"
-            android:textColor="#ffffff"
-            />
+                android:theme="@style/MyButton"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
