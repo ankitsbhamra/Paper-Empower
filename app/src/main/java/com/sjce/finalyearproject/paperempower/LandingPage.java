@@ -119,7 +119,16 @@ public class LandingPage extends AppCompatActivity {
         email=(EditText)this.findViewById(R.id.emailIdEditText);
         String pwdSt=String.valueOf(pwd.getText());
         String emailSt= String.valueOf(email.getText());
-
+        if(pwdSt.isEmpty()){
+            pwd.setError("Password Cannot Be Empty");
+            pwd.requestFocus();
+            return;
+        }
+        if(emailSt.isEmpty()){
+            email.setError("Email Cannot Be Empty");
+            email.requestFocus();
+            return;
+        }
         Log.d("Moth","In next()"+emailSt+pwdSt);
         progressDialog.setMessage("Logging In User");
         progressDialog.show();
