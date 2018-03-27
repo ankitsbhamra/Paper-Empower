@@ -76,7 +76,7 @@ public class LandingPage extends AppCompatActivity {
         *///REPLACES SHARED PREFERENCES
         if (fbaseauth.getCurrentUser()!=null){
             Intent i = new Intent(LandingPage.this,RegisterOrCollect.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
         }
         Button btn= (Button) this.findViewById(R.id.next2);
