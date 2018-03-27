@@ -2,6 +2,7 @@ package com.sjce.finalyearproject.paperempower;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 
@@ -11,6 +12,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -210,7 +213,10 @@ protected Object doInBackground(Object... params) {
 */
 
 //TODO: remove demo markers
-    @Override
+/*    @Override
+    public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+        GoogleMap.OnPolylineClickListener, GoogleMap.OnPolygonClickListener {
+*/
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
@@ -222,9 +228,13 @@ protected Object doInBackground(Object... params) {
         mMap.addMarker(new MarkerOptions().position(marker2).title("Marker 2"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(marker2));
 
-        LatLng marker3 = new LatLng(12.3132715,76.6112378);
+        LatLng marker3 = new LatLng(12.3132715, 76.6112378);
         mMap.addMarker(new MarkerOptions().position(marker3).title("Marker 3"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(marker3));
+
+//        Polyline polyline1 = googleMap.addPolyline(new PolylineOptions().clickable(true).add(marker1, marker2, marker3));
+//          mMap.setOnPolylineClickListener(this);
+//        googleMap.setOnPolygonClickListener(this);
 
         //TODO: Remove the selected marker - on click of marker/demo button on maps
 
@@ -276,4 +286,6 @@ ref.addChildEventListener(new ChildEventListener() {
 });
 */
     }
+//}
+
 }
