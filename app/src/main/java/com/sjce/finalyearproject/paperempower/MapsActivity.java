@@ -218,9 +218,19 @@ protected Object doInBackground(Object... params) {
         GoogleMap.OnPolylineClickListener, GoogleMap.OnPolygonClickListener {
 */
     public void onMapReady(GoogleMap googleMap) {
+        Log.d("Motherfucking tag","Inside onMapReady");
         mMap = googleMap;
 
-        LatLng marker1 = new LatLng(12.3369598, 76.5904817);
+        for(HousesInfo hi:housesInfo){
+
+            LatLng marker = new LatLng(hi.latitude, hi.longitude);
+            Log.d("Motherfucking tag", String.valueOf(hi.latitude));
+            Log.d("Motherfucking tag", String.valueOf(hi.longitude));
+            mMap.addMarker(new MarkerOptions().position(marker).title(hi.phonenumber));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
+
+        }
+        /*LatLng marker1 = new LatLng(12.3369598, 76.5904817);
         mMap.addMarker(new MarkerOptions().position(marker1).title("Marker 1"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(marker1));
 
@@ -230,7 +240,7 @@ protected Object doInBackground(Object... params) {
 
         LatLng marker3 = new LatLng(12.3132715, 76.6112378);
         mMap.addMarker(new MarkerOptions().position(marker3).title("Marker 3"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker3));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker3));*/
 
 //        Polyline polyline1 = googleMap.addPolyline(new PolylineOptions().clickable(true).add(marker1, marker2, marker3));
 //          mMap.setOnPolylineClickListener(this);
