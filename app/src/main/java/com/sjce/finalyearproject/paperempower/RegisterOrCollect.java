@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -57,6 +58,7 @@ public class RegisterOrCollect extends AppCompatActivity {
 //        Intent i=new Intent(this,MapsActivity.class); TODO:CHANGE HERE
         Log.d("Motherfuckingtag","Inside Collect Event");
         Intent i=new Intent(this,CollectActivity.class);
+        Toast.makeText(this,"Choose the houses to collect from",Toast.LENGTH_LONG).show();
         startActivity(i);
 
     }

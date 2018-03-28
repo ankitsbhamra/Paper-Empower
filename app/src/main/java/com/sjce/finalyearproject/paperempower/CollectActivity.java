@@ -187,7 +187,7 @@ public class CollectActivity extends AppCompatActivity {
     {
 
         if(latCheckedArr.isEmpty()&&longCheckedArr.isEmpty())
-            Toast.makeText(this,"Please select houses to visit",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Choose your destination and navigate",Toast.LENGTH_LONG).show();
         /*else
         {
 
