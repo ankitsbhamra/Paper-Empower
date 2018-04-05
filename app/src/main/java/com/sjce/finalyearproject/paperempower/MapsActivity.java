@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,6 +39,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 
+        Button btndemo= (Button) this.findViewById(R.id.demoButton);
+        btndemo.setOnClickListener(new View.OnClickListener(){
+                                      public void onClick(View v){
+                                          Log.d("Motherfucking tag","Inside demo button");
+                                          removeMarkers();
+                                      }
+                                  });
         houses = FirebaseDatabase.getInstance().getReference("houses");
         final ArrayList<String> keyList = (ArrayList<String>) getIntent().getSerializableExtra("keyList");
         houses.addValueEventListener(new ValueEventListener() {
@@ -58,6 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
+
         //housesInfo populated with selected houses
         //Log.d("Motherfucking tag", keyList);
         mapFragment.getMapAsync(this);
@@ -234,6 +243,16 @@ protected Object doInBackground(Object... params) {
 
         }
     }
+    public void removeMarkers (){
+        Log.d("Motherfucking tag","Inside remove marker function");
+        for(int i = 0; i<housesInfo.size(); i++) {
+            Log.d("Motherfucking tag","Inside marker co-ordinates");
+            LatLng marker = new LatLng(housesInfo.get(i).latitude, housesInfo.get(i).longitude);
+            mMap.clear();
+
+        }
+    }
+
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         addMarkers();
@@ -303,6 +322,7 @@ ref.addChildEventListener(new ChildEventListener() {
 
 });
 */
+
     }
 //}
 
