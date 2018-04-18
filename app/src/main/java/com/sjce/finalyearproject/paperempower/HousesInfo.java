@@ -12,7 +12,7 @@ public class HousesInfo {
     public String key;
     public double latitude;
     public double longitude;
-
+    public boolean completed;
     public HousesInfo(){
 
     }
@@ -81,5 +81,6 @@ public class HousesInfo {
         this.phonenumber=number;
         this.zipcode = zip;
         this.key = key;
+        this.completed=false;
     }
 }

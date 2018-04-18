@@ -61,17 +61,24 @@ public class LandingPage extends AppCompatActivity {
         fbaseauth = FirebaseAuth.getInstance();
         usersref = FirebaseDatabase.getInstance().getReference("users");
         progressDialog = new ProgressDialog(this);
-        pref=getApplicationContext().getSharedPreferences("Paper Empower",0);
-        SharedPreferences.Editor editor=pref.edit();
+        if(fbaseauth.getCurrentUser()!=null){
+            Intent i=new Intent(this,RegisterOrCollect.class);
+            startActivity(i);
+            return;
+        }
+        //pref=getApplicationContext().getSharedPreferences("Paper Empower",0);
+        //SharedPreferences.Editor editor=pref.edit();
 //        Intent in=new Intent(this,RegisterOrCollect.class);//TODO: Remove this
 //        startActivity(in);//TODO: Remove this
-        if(pref.getString(key,"false").equals(val))
+        /*
+        if(pref.getString(key,"false").equals("val"))
         {
             Log.d("Motherfucking tag","Inside sharedPref if");
             Intent i=new Intent(this,RegisterOrCollect.class);
             startActivity(i);
             return;
         }
+        */
         Button btn= (Button) this.findViewById(R.id.next2);
         btn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -101,8 +108,8 @@ public class LandingPage extends AppCompatActivity {
     private void next(View v)
     {
         Log.d("motherfucking tag","Inside next()");
-        pref=getApplicationContext().getSharedPreferences("Paper Empower",0);
-        SharedPreferences.Editor editor=pref.edit();
+        //pref=getApplicationContext().getSharedPreferences("Paper Empower",0);
+        //SharedPreferences.Editor editor=pref.edit();
         signUpLL= (LinearLayout) this.findViewById(R.id.SignUp);
         //cnfmpwdtv= (TextView) this.findViewById(R.id.confirmPasswordTextView);
         cnfmpwdet= (TextView) this.findViewById(R.id.confirmPasswordEditText);
@@ -112,7 +119,16 @@ public class LandingPage extends AppCompatActivity {
         email=(EditText)this.findViewById(R.id.emailIdEditText);
         String pwdSt=String.valueOf(pwd.getText());
         String emailSt= String.valueOf(email.getText());
-
+        if(emailSt.isEmpty()){
+            email.setError("Email ID is mandatory");
+            email.requestFocus();
+            return;
+        }
+        if(pwdSt.isEmpty()){
+            pwd.setError("Password is mandatory");
+            pwd.requestFocus();
+            return;
+        }
         Log.d("Moth","In next()"+emailSt+pwdSt);
         progressDialog.setMessage("Logging In User");
         progressDialog.show();
@@ -131,7 +147,6 @@ public class LandingPage extends AppCompatActivity {
                     return;
 
                 } else if (task.getException() instanceof FirebaseAuthInvalidUserException) {
-                    Log.d("Motherfucking tag","Inside invalid user");
                     progressDialog.cancel();
                     cnfmpwdet.setVisibility(View.VISIBLE);
                     signUpLL.setVisibility(View.VISIBLE);

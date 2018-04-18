@@ -12,16 +12,32 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
+
 public class RegisterOrCollect extends AppCompatActivity {
 
-    SharedPreferences pref;
+    private FirebaseAuth mAuth;
+
     //TODO: Import volunteer name after welcome
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_or_collect);
+        mAuth = FirebaseAuth.getInstance();
         Button btnReg= (Button) this.findViewById(R.id.registerButton);
         Button btnCol= (Button) this.findViewById(R.id.collectButton);
+        Button btnLog= (Button) this.findViewById(R.id.logoutButton);
+        btnLog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                Intent intent = new Intent(RegisterOrCollect.this,LandingPage.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
         btnReg.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 Log.d("Motherfucking tag","Inside next2 onclick listener");

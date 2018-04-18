@@ -52,7 +52,7 @@ public class RegisterNewUser extends AppCompatActivity {
     LocationListener locationListener;
     double lat, lng;
     DatabaseReference housesref;
-    SharedPreferences pref;
+
 
     private static final String TAG = "Motherfucking tag";
     private Boolean flag = false;
