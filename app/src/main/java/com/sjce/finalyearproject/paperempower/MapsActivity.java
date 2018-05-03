@@ -1,6 +1,8 @@
 package com.sjce.finalyearproject.paperempower;
 //TODO: Style Selected Marker and add Marker for current location
 
+import android.*;
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -43,6 +45,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ProgressDialog progressDialog;
     int ctr = 0;
     String num;
+
     Button btndemo;
     Button call;
 
@@ -126,22 +129,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         for (HousesInfo hi2 : housesInfo) {
             Log.d("Motherfucking tag", hi2.phonenumber);
-            LatLng marker = new LatLng(hi2.latitude, hi2.longitude);
-            mMap.addMarker(new MarkerOptions().position(marker).title(hi2.fullname));
-
-
-    /*        mMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
-
-                @Override
-                public void onInfoWindowClick(Marker arg0) {
-                    // TODO Auto-generated method stub
-
-                }
-            });
-         }
-      */
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
-/*
+            if(hi2.completed==false) {
+                LatLng marker = new LatLng(hi2.latitude, hi2.longitude);
+                mMap.addMarker(new MarkerOptions().position(marker).title(hi2.fullname).snippet(hi2.phonenumber));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
+            }
+            /*
             Intent callIntent = new Intent(Intent.ACTION_CALL);
             callIntent.setData(Uri.parse(hi2.phonenumber));
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -181,29 +174,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void callnumber() {
-        Log.d("Motherfucking tag", "Inside remove marker function");
+        Log.d("Motherfucking tag", "Inside call number function");
 
         Log.d("Motherfucking tag", num);
-        for (HousesInfo hi : housesInfo) {
-            try {
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + hi.phonenumber.toString()));
-                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                startActivity(callIntent);
-            } catch (ActivityNotFoundException activityException) {
-                Log.e("Calling a Phone Number", "Call failed", activityException);
+        if(progressDialog.isShowing())
+            progressDialog.cancel();
+
+        try {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" +num));
+            if (ActivityCompat.checkSelfPermission(MapsActivity.this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+                Log.d("Motherfucking tag", "Inside if");
+                return;
+
             }
-            }
+            startActivity(callIntent);
         }
+        catch (ActivityNotFoundException activityException){
+            Log.d("Motherfucking tag", "Call failed");
+        }
+    }
+
 
         //progressDialog.cancel();
 
@@ -216,9 +209,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onMarkerClick(Marker marker) {
                 btndemo.setVisibility(View.VISIBLE);
                 call.setVisibility(View.VISIBLE);
-                num=marker.getTitle();
+                num=marker.getSnippet();
                 Log.d("Motherfucking tag",num);
                 return false;
+            }
+        });
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                btndemo.setVisibility(View.INVISIBLE);
+                call.setVisibility(View.INVISIBLE);
+                num="";
+                Log.d("Motherfucking tag",num);
             }
         });
 
