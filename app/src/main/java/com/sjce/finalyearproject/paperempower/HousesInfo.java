@@ -1,5 +1,7 @@
 package com.sjce.finalyearproject.paperempower;
 
+import java.util.Date;
+
 /**
  * Created by Ankit on 3/19/2018.
  */
@@ -10,6 +12,7 @@ public class HousesInfo {
     public String phonenumber;
     public String zipcode;
     public String key;
+    public String lastcollect;
     public double latitude;
     public double longitude;
     public boolean completed;
@@ -73,7 +76,7 @@ public class HousesInfo {
         this.fullname = fullname;
     }
 
-    public HousesInfo(String name, String address, String number, String zip, double latitude, double longitude, String key){
+    public HousesInfo(String name, String address, String number, String zip, String lastcollect, double latitude, double longitude, String key){
         this.fullname=name;
         this.latitude=latitude;
         this.longitude=longitude;
@@ -81,6 +84,7 @@ public class HousesInfo {
         this.phonenumber=number;
         this.zipcode = zip;
         this.key = key;
+        this.lastcollect = lastcollect;
         this.completed=false;
     }
 }

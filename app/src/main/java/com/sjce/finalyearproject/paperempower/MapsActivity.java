@@ -1,7 +1,8 @@
 package com.sjce.finalyearproject.paperempower;
 //TODO: Style Selected Marker and add Marker for current location
 
-import android.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -32,6 +33,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -158,6 +160,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d("Motherfucking tag", "Inside remove marker function");
 
         Log.d("Motherfucking tag", num);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+        String lastcollect = formatter.format(date);
+        houses.child(ckey).child("lastcollect").setValue(lastcollect);
         for (HousesInfo hi : housesInfo) {
             if (hi.phonenumber.equals(num)) {
                 ckey = hi.key;

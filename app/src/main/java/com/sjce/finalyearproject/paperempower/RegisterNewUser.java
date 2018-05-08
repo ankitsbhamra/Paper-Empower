@@ -52,8 +52,7 @@ public class RegisterNewUser extends AppCompatActivity {
     LocationManager locationManager;
     LocationListener locationListener;
     double lat, lng;
-    //ArrayList<String> arr = new ArrayList<>();
-    String arr[] = {"AIISH Layout","Bogadi","CFTRI","Dattagalli","Gangotri Layout","Gokulam","JP Nagar","KC Layout","Krishnamurthypuram","Kuvempunagar","Lingambudipalya","Nivedithanagar","Prashanth Nagar","Ramakrishna Nagar","Sawaswathipuram","TK Layout","Vijashreepura","Vijaya Nagar Colony","Srirampura"};
+    //String arr[] = {"AIISH Layout","Bogadi","CFTRI","Dattagalli","Gangotri Layout","Gokulam","JP Nagar","KC Layout","Krishnamurthypuram","Kuvempunagar","Lingambudipalya","Nivedithanagar","Prashanth Nagar","Ramakrishna Nagar","Sawaswathipuram","TK Layout","Vijashreepura","Vijaya Nagar Colony","Srirampura"};
     DatabaseReference housesref;
     DatabaseReference arearef;
 
@@ -155,7 +154,8 @@ public class RegisterNewUser extends AppCompatActivity {
             return;
         }
         String key = housesref.child("houses").push().getKey();
-        HousesInfo housesInfo = new HousesInfo(fullname,addr,num,zip,lat,lon,key);
+        String date = "Not Collected";
+        HousesInfo housesInfo = new HousesInfo(fullname,addr,num,zip,date,lat,lon,key);
         //TODO: Code to add an area to the database. Add UI for this
         /*for(int i=0;i<19;i++) {
             Log.d("Motherfucking tag","Inside for loop");
