@@ -37,6 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Console;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +78,7 @@ public class RegisterNewUser extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_new_user);
         housesref = FirebaseDatabase.getInstance().getReference();
-        arearef = FirebaseDatabase.getInstance().getReference("houses");
+        arearef = FirebaseDatabase.getInstance().getReference("areas");
         ll = (LinearLayout) this.findViewById(R.id.coordinatesLinearLayout);
         latitude = (TextView) this.findViewById(R.id.lat);
         longitude = (TextView) this.findViewById(R.id.lon);
@@ -104,6 +105,7 @@ public class RegisterNewUser extends AppCompatActivity {
                     housesInfo.setLongitude(housesSnapshot.getValue(HousesInfo.class).getLongitude());
                     */
                     AreaInfo areaInfo=areaSnapshot.getValue(AreaInfo.class);
+                    Log.d("Moth",areaInfo.name);
                     areaList.add(areaInfo);
 
                 }

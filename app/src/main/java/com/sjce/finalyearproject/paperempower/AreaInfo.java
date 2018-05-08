@@ -8,7 +8,9 @@ public class AreaInfo {
     public String name;
     public String key;
 
-    public AreaInfo(String name,String key) {
+    public AreaInfo(){
+    }
+    public AreaInfo(String name, String key) {
         this.name = name;
         this.key = key;
     }
