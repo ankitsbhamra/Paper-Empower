@@ -22,15 +22,20 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,16 +51,23 @@ public class RegisterNewUser extends AppCompatActivity {
     TextView longitude;
     EditText zipcode;
     EditText name;
+    EditText door;
     EditText number;
-    EditText address;
+    EditText main;
+    EditText cross;
+    EditText block;
+    EditText additionalDetails;
     Button coord,register;
     LocationManager locationManager;
     LocationListener locationListener;
+    Spinner area;
     double lat, lng;
     //String arr[] = {"AIISH Layout","Bogadi","CFTRI","Dattagalli","Gangotri Layout","Gokulam","JP Nagar","KC Layout","Krishnamurthypuram","Kuvempunagar","Lingambudipalya","Nivedithanagar","Prashanth Nagar","Ramakrishna Nagar","Sawaswathipuram","TK Layout","Vijashreepura","Vijaya Nagar Colony","Srirampura"};
     DatabaseReference housesref;
     DatabaseReference arearef;
-
+    List<AreaInfo> areaList=new ArrayList<>();
+    List<String> areaString=new ArrayList<>();
+    ArrayAdapter<String> areaAdapter;
 
     private static final String TAG = "Motherfucking tag";
     private Boolean flag = false;
@@ -65,7 +77,7 @@ public class RegisterNewUser extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_new_user);
         housesref = FirebaseDatabase.getInstance().getReference();
-        arearef = FirebaseDatabase.getInstance().getReference();
+        arearef = FirebaseDatabase.getInstance().getReference("houses");
         ll = (LinearLayout) this.findViewById(R.id.coordinatesLinearLayout);
         latitude = (TextView) this.findViewById(R.id.lat);
         longitude = (TextView) this.findViewById(R.id.lon);
@@ -76,7 +88,41 @@ public class RegisterNewUser extends AppCompatActivity {
         //if you want to lock screen for always Portrait mode
         //  setRequestedOrientation(ActivityInfo
         //        .SCREEN_ORIENTATION_PORTRAIT);
+        arearef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Mother","Inside onDatachange-area");
+                //size = dataSnapshot.getChildrenCount();
+                for(DataSnapshot areaSnapshot:dataSnapshot.getChildren()){
+                    //HousesInfo housesInfo = new HousesInfo();
+                    /*
+                    housesInfo.setAddress(housesSnapshot.getValue(HousesInfo.class).getAddress());
+                    housesInfo.setFullname(housesSnapshot.getValue(HousesInfo.class).getFullname());
+                    housesInfo.setPhonenumber(housesSnapshot.getValue(HousesInfo.class).getPhonenumber());
+                    housesInfo.setZipcode(housesSnapshot.getValue(HousesInfo.class).getZipcode());
+                    housesInfo.setLatitude(housesSnapshot.getValue(HousesInfo.class).getLatitude());
+                    housesInfo.setLongitude(housesSnapshot.getValue(HousesInfo.class).getLongitude());
+                    */
+                    AreaInfo areaInfo=areaSnapshot.getValue(AreaInfo.class);
+                    areaList.add(areaInfo);
 
+                }
+
+            Log.d("Mother", String.valueOf(areaList.size()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(RegisterNewUser.this,"Unable to read from Database",Toast.LENGTH_LONG);
+            }
+        });
+
+        for(AreaInfo ai:areaList)
+            areaString.add(ai.name);
+
+        area= (Spinner) this.findViewById(R.id.areaDropDownSpinner);
+        areaAdapter= new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,areaString);
+        area.setAdapter(areaAdapter);
         locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
 
@@ -85,7 +131,7 @@ public class RegisterNewUser extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d(TAG, "Inside onClick");
                 ll.setVisibility(View.VISIBLE);
-                getCoordGPS();
+                getCoordNETOWRK();
             }
         });
         register.setOnClickListener(new View.OnClickListener() {
@@ -104,8 +150,12 @@ public class RegisterNewUser extends AppCompatActivity {
         zipcode = (EditText) this.findViewById(R.id.zipcodeEditText);
         name = (EditText) this.findViewById(R.id.nameEditText);
         number = (EditText) this.findViewById(R.id.phNumberEditText);
-        address = (EditText) this.findViewById(R.id.addressEditText);
-
+        door = (EditText) this.findViewById(R.id.doorEditText);
+        main= (EditText) findViewById(R.id.mainEditText);
+        cross= (EditText) findViewById(R.id.crossEditText);
+        block= (EditText) findViewById(R.id.blockEditText);
+        additionalDetails= (EditText) findViewById(R.id.additionalEditText);
+        area= (Spinner) this.findViewById(R.id.areaDropDownSpinner);
         double lat=-999;
         double lon=-999;
         String latitudeStr;
@@ -125,9 +175,26 @@ public class RegisterNewUser extends AppCompatActivity {
         //TODO: String values are not getting extracted from Edit Texts. Being Stored in some weird format in FireBase
         String zip = zipcode.getText().toString().trim();
         String fullname = name.getText().toString().trim();
-        String addr = address.getText().toString().trim();
+        String mainStr = main.getText().toString().trim();
+        String crossStr = cross.getText().toString().trim();
+        String blockStr = block.getText().toString().trim();
+        String additionalDetailsStr = additionalDetails.getText().toString().trim();
         String num = number.getText().toString().trim();
+        String doorStr = door.getText().toString().trim();
+        String areaSt=area.getSelectedItem().toString();
+        String areaKey=null;
+
+        for(AreaInfo ai:areaList)
+            if((ai.name).equals(areaSt))
+                areaKey=ai.key;
+
         Log.d("Motherfucking tag",fullname);
+        if(areaKey==null)
+        {
+            area.requestFocus();
+            Toast.makeText(this,"Select an area",Toast.LENGTH_LONG).show();
+            return;
+        }
         if(fullname.isEmpty()){
             name.setError("Name Cannot Be Empty");
             name.requestFocus();
@@ -138,9 +205,23 @@ public class RegisterNewUser extends AppCompatActivity {
             zipcode.requestFocus();
             return;
         }
-        if(addr.isEmpty()){
-            address.setError("Address Cannot Be Empty");
-            address.requestFocus();
+        if(mainStr.isEmpty()){
+            main.setError("Address Cannot Be Empty");
+            main.requestFocus();
+            return;
+        }
+        if(crossStr.isEmpty()){
+            cross.setError("Address Cannot Be Empty");
+            cross.requestFocus();
+            return;
+        }
+        if(blockStr.isEmpty()){
+            block.setError("Address Cannot Be Empty");
+            block.requestFocus();
+            return;
+        }
+        if(additionalDetailsStr.isEmpty()){
+            additionalDetailsStr="";
             return;
         }
         if((num.isEmpty())||(num.length()!=10)){
@@ -155,7 +236,7 @@ public class RegisterNewUser extends AppCompatActivity {
         }
         String key = housesref.child("houses").push().getKey();
         String date = "Not Collected";
-        HousesInfo housesInfo = new HousesInfo(fullname,addr,num,zip,date,lat,lon,key);
+        HousesInfo housesInfo = new HousesInfo(fullname,areaKey,doorStr,mainStr,crossStr,blockStr,additionalDetailsStr,num,zip,date,lat,lon,key);
         //TODO: Code to add an area to the database. Add UI for this
         /*for(int i=0;i<19;i++) {
             Log.d("Motherfucking tag","Inside for loop");
@@ -232,7 +313,7 @@ public class RegisterNewUser extends AppCompatActivity {
 
     public void ifChecker()
     {
-        getCoordGPS();
+        getCoordNETOWRK();
     }
 
     public void getCoordGPS() {

@@ -1,14 +1,20 @@
 package com.sjce.finalyearproject.paperempower;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Ankit on 3/19/2018.
  */
 
 public class HousesInfo {
+    public String door;
     public String fullname;
-    public String address;
+    public String main;
+    public String cross;
+    public String block;
+    public String additionalDetails;
+    public String areaKey;
     public String phonenumber;
     public String zipcode;
     public String key;
@@ -20,13 +26,43 @@ public class HousesInfo {
 
     }
 
-    public String getAddress() {
-        return address;
+    public String getMain() {
+        return main;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setMain(String main) {
+        this.main = main;
     }
+
+    public String getCross() {
+        return cross;
+    }
+
+    public void setCross(String cross) {
+        this.cross = cross;
+    }
+
+    public String getBlock() {
+        return block;
+    }
+
+    public void setBlock(String block) {
+        this.block= block;
+    }
+
+    public String getAdditionalDetails() {
+        return additionalDetails;
+    }
+
+    public void setAdditionalDetails(String additionalDetails) {
+        this.additionalDetails = additionalDetails;
+    }
+
+    public String getAreaKey() {
+        return areaKey;
+    }
+
+    public void setAreaKey(String areaKey) {this.areaKey = areaKey;}
 
     public String getPhonenumber() {
         return phonenumber;
@@ -76,15 +112,20 @@ public class HousesInfo {
         this.fullname = fullname;
     }
 
-    public HousesInfo(String name, String address, String number, String zip, String lastcollect, double latitude, double longitude, String key){
+    public HousesInfo(String name, String areaKey,String door,String main,String cross,String block,String additionalDetails, String number, String zip, String lastcollect, double latitude, double longitude, String key){
         this.fullname=name;
         this.latitude=latitude;
         this.longitude=longitude;
-        this.address=address;
+        this.areaKey=areaKey;
+        this.main=main;
+        this.cross=cross;
+        this.block=block;
+        this.additionalDetails=additionalDetails;
         this.phonenumber=number;
         this.zipcode = zip;
         this.key = key;
         this.lastcollect = lastcollect;
         this.completed=false;
+        this.door=door;
     }
 }

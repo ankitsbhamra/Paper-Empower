@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,7 +11,12 @@
     tools:context="com.sjce.finalyearproject.paperempower.RegisterNewUser">
 
 
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    >
 
     <EditText
         android:layout_width="match_parent"
@@ -35,16 +40,73 @@
         android:id="@+id/phNumberEditText"
         />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:layout_margin="10dp"
+            android:text="Area"/>
 
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:id="@+id/areaDropDownSpinner"></Spinner>
+
+    </LinearLayout>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:hint="Address"
+        android:hint="Main"
         android:textSize="24sp"
         android:textColor="@color/colorBlack"
-        android:id="@+id/addressEditText"
+        android:id="@+id/doorEditText"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:hint="Main"
+        android:textSize="24sp"
+        android:textColor="@color/colorBlack"
+        android:id="@+id/mainEditText"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:hint="Cross"
+        android:textSize="24sp"
+        android:textColor="@color/colorBlack"
+        android:id="@+id/crossEditText"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:hint="Block"
+        android:textSize="24sp"
+        android:textColor="@color/colorBlack"
+        android:id="@+id/blockEditText"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:hint="Additional Details (Optional)"
+        android:textSize="24sp"
+        android:textColor="@color/colorBlack"
+        android:id="@+id/additionalEditText"
         />
 
     <EditText
@@ -109,5 +171,6 @@
         android:textColor="#ffffff"
         />
 </LinearLayout>
+</ScrollView>
 
 

@@ -119,7 +119,7 @@ public class CollectActivity extends AppCompatActivity {
         {
             String text="";
             Log.d("Motherfucking tag","Inside Create Elements");//NOT ENTERING HERE
-            text=text+"Name:"+hi.fullname+"\nAddress:"+hi.address+"\nPhone Number:"+hi.phonenumber+"\nLast Collected:"+hi.lastcollect;
+            text=text+"Name:"+hi.fullname+"\nPhone Number:"+hi.phonenumber+"\nLast Collected:"+hi.lastcollect;
 
             TextView tv=new TextView(this);
             tv.setText(text);
