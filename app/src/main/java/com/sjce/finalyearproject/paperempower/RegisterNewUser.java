@@ -33,6 +33,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,7 +52,10 @@ public class RegisterNewUser extends AppCompatActivity {
     LocationManager locationManager;
     LocationListener locationListener;
     double lat, lng;
+    //ArrayList<String> arr = new ArrayList<>();
+    String arr[] = {"AIISH Layout","Bogadi","CFTRI","Dattagalli","Gangotri Layout","Gokulam","JP Nagar","KC Layout","Krishnamurthypuram","Kuvempunagar","Lingambudipalya","Nivedithanagar","Prashanth Nagar","Ramakrishna Nagar","Sawaswathipuram","TK Layout","Vijashreepura","Vijaya Nagar Colony","Srirampura"};
     DatabaseReference housesref;
+    DatabaseReference arearef;
 
 
     private static final String TAG = "Motherfucking tag";
@@ -62,6 +66,7 @@ public class RegisterNewUser extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_new_user);
         housesref = FirebaseDatabase.getInstance().getReference();
+        arearef = FirebaseDatabase.getInstance().getReference();
         ll = (LinearLayout) this.findViewById(R.id.coordinatesLinearLayout);
         latitude = (TextView) this.findViewById(R.id.lat);
         longitude = (TextView) this.findViewById(R.id.lon);
@@ -151,7 +156,17 @@ public class RegisterNewUser extends AppCompatActivity {
         }
         String key = housesref.child("houses").push().getKey();
         HousesInfo housesInfo = new HousesInfo(fullname,addr,num,zip,lat,lon,key);
+        //TODO: Code to add an area to the database. Add UI for this
+        /*for(int i=0;i<19;i++) {
+            Log.d("Motherfucking tag","Inside for loop");
+            String key1 = arearef.child("areas").push().getKey();
+            String name = arr[i];
+            AreaInfo areaInfo = new AreaInfo(name,key1);
+            arearef.child("areas").child(key1).setValue(areaInfo);
+        }
+        */
         housesref.child("houses").child(key).setValue(housesInfo);
+
         Toast.makeText(RegisterNewUser.this, "House Registered!", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(RegisterNewUser.this,RegisterOrCollect.class);
         startActivity(intent);
