@@ -9,12 +9,28 @@
     tools:context="com.sjce.finalyearproject.paperempower.MapsActivity" >
 
     <Button
+        android:id="@+id/demoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|top"
-        android:text="Demo Button"
+        android:text="Newspaper Collected"
+        android:background="#ffffff"
+        android:visibility="gone"
         android:padding="10dp"
         android:layout_marginTop="20dp"
         android:paddingRight="10dp"/>
+
+    <Button
+        android:id="@+id/callButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:text="call"
+        android:layout_gravity="left|bottom"
+        android:visibility="gone"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:paddingLeft="5dp"
+        />
 
 </fragment>

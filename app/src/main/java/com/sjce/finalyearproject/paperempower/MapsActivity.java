@@ -1,19 +1,31 @@
 package com.sjce.finalyearproject.paperempower;
+//TODO: Style Selected Marker and add Marker for current location
 
+import android.*;
+import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,14 +34,20 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-
+    private ChildEventListener childEventListener;
     List<HousesInfo> housesInfo = new ArrayList<HousesInfo>();//LIST THAT CONTAINS ALL THE SELECTED HOUSES
     DatabaseReference houses;
+    private ProgressDialog progressDialog;
     int ctr = 0;
+    String num;
+
+    Button btndemo;
+    Button call;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,273 +55,182 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-
+        Log.d("MotherFucking tag", "Inside onCreate");
+        progressDialog = new ProgressDialog(this);
+        btndemo = (Button) this.findViewById(R.id.demoButton);
+        call = (Button) this.findViewById(R.id.callButton);
         houses = FirebaseDatabase.getInstance().getReference("houses");
         final ArrayList<String> keyList = (ArrayList<String>) getIntent().getSerializableExtra("keyList");
+        //Log.d("MotherFucking Tag",keyList.get(0));
+        mapFragment.getMapAsync(this);
         houses.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds:dataSnapshot.getChildren()){
+                Log.d("MotherFucking Tag", "Inside onDataChange");
+                housesInfo.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     HousesInfo hi = ds.getValue(HousesInfo.class);
-                    if(keyList.contains(hi.key)){
+                    if ((keyList.contains(hi.key)) && (hi.completed == false)) {
                         housesInfo.add(hi);
-                        //Log.d("Motherfucking tag",String.valueOf(housesInfo.get(ctr).latitude));
+                        //Log.d("Motherfucking tag",String.valueOf(housesInfo.get(ctr).fullname));
                         ctr++;
                     }
                 }
+                addMarkers();
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(MapsActivity.this, "Unable to read from Database", Toast.LENGTH_LONG);
+                Log.d("Motherfucking tag", "Inside onCancelled");
+            }
+        });
+        btndemo.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.d("Motherfucking tag", "Inside demo button");
+                progressDialog.setMessage("Please Wait");
+                progressDialog.show();
+                removeMarkers();
+            }
+        });
+
+        call.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.d("Motherfucking tag", "Inside call button");
+                progressDialog.setMessage("Please Wait");
+                progressDialog.show();
+                callnumber();
 
             }
         });
         //housesInfo populated with selected houses
-        //Log.d("Motherfucking tag", keyList);
-        mapFragment.getMapAsync(this);
-        Button btnReg= (Button) this.findViewById(R.id.collectButton);
-    }
+        Log.d("Motherfucking tag", "Inside OnCreate2");
 
-    //TODO: get lat and long from registered data - firebase as JSON objects and parse to getview
-
-/*
-    public View getView(int position, View convertView, ViewGroup Parent)
-    {
-        final ViewHolder holder=new ViewHolder();
-        View view=convertView;
-        if (view==null) {
-            convertView= inflater.inflate(R.layout.layout_row, null);
-        }
-
-
-
-        holder.textdistance=(TextView) convertView.findViewById(R.id.textView_Distance);
-
-        holder.position = position;
-
-
-        if(data.size()<=0)
-        {
-
-            Toast.makeText(activity, "No data", Toast.LENGTH_LONG).show();
-        }
-        else
-        {
-   **new ThumbnailTask(position, holder)
-                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);**
-        }
-        return convertView;
-        }
-   //Thumbnail Class
- private static class ThumbnailTask extends AsyncTask {
-    private int mPosition;
-    private ViewHolder mHolder;
-
-    public ThumbnailTask(int position, ViewHolder holder) {
-        mPosition = position;
-        mHolder = holder;
-    }
-
-
-
-@Override
-protected Object doInBackground(Object... params) {
-    // TODO Auto-generated method stub
-    String Distance="3";
-    String uri="https://maps.googleapis.com/maps/api/distancematrix/json?  origins=(Your source Addres like XYZ,South Delhi-110064),&mode=deriving&sensor=false&key=(Your API Key)";
-
-
-    String result= GET(uri);
-    Log.d("result","res="+result);
-
-    try {
-
-        //jArray = new JSONObject(result);
-        JSONObject object = (JSONObject) new JSONTokener(result).nextValue();
-        JSONArray array = object.getJSONArray("rows");
-        // Log.d("JSON","array: "+array.toString());
-
-        //Routes is a combination of objects and arrays
-        JSONObject rows = array.getJSONObject(0);
-        //Log.d("JSON","routes: "+routes.toString());
-        JSONArray elements = rows.getJSONArray("elements");
-        // Log.d("JSON","legs: "+legs.toString());
-
-        JSONObject steps = elements.getJSONObject(0);
-        //Log.d("JSON","steps: "+steps.toString());
-
-        JSONObject distance = steps.getJSONObject("distance");
-        Log.d("JSON","distance: "+distance.toString());
-
-        Distance = distance.getString("text");
-        Log.d("final value","tot dis="+Distance);
-        JSONObject duration=steps.getJSONObject("duration");
-        // MyDuration=duration.getString("text");
-
+        //Button btnReg= (Button) this.findViewById(R.id.collectButton);
 
     }
-    catch(JSONException e)
-    {
-        Log.d("JSONEXCeption","my exce"+e.getMessage());
-    }
-    return Distance;
-}
-
-
 
     @Override
-    protected void onPostExecute(Object result) {
-        // TODO Auto-generated method stub
-        mHolder.textdistance.setText(result.toString());
+    public void onBackPressed() {
+        super.onBackPressed();
+        housesInfo.clear();
+        Log.d("MotherFucking Tag", "Inside onBackPressed");
+        Intent intent = new Intent(this, RegisterOrCollect.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
 
-}
+    public void addMarkers() {
+        Log.d("Motherfucking tag", "Inside addMarkers");
+        if (progressDialog.isShowing()) {
+            progressDialog.cancel();
+        }
+        for (HousesInfo hi2 : housesInfo) {
+            Log.d("Motherfucking tag", hi2.phonenumber);
+            if(hi2.completed==false) {
+                LatLng marker = new LatLng(hi2.latitude, hi2.longitude);
+                mMap.addMarker(new MarkerOptions().position(marker).title(hi2.fullname).snippet(hi2.phonenumber));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
+            }
+            /*
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse(hi2.phonenumber));
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            startActivity(callIntent);
+*/
+        }
+    }
 
-    //method to execute Url
 
-    private static  String GET(String url)
-    {
-        InputStream inputStream = null;
-        String result = "";
+    public void removeMarkers() {
+        String ckey = "999";
+        Log.d("Motherfucking tag", "Inside remove marker function");
+
+        Log.d("Motherfucking tag", num);
+        for (HousesInfo hi : housesInfo) {
+            if (hi.phonenumber.equals(num)) {
+                ckey = hi.key;
+                Log.d("Motherfucking tag", "Number Found");
+                Log.d("Motherfucking tag", hi.phonenumber);
+                //housesInfo.remove(hi);
+                break;
+            }
+        }
+        houses.child(ckey).child("completed").setValue(true);
+        Log.d("Motherfucking tag", "Data Changed");
+        mMap.clear();
+        //progressDialog.cancel();
+    }
+
+    public void callnumber() {
+        Log.d("Motherfucking tag", "Inside call number function");
+
+        Log.d("Motherfucking tag", num);
+        if(progressDialog.isShowing())
+            progressDialog.cancel();
+
         try {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" +num));
+            if (ActivityCompat.checkSelfPermission(MapsActivity.this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
 
-            // create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
+                ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+                Log.d("Motherfucking tag", "Inside if");
+                return;
 
-            // make GET request to the given URL
-            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-
-
-            // receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-
-
-
-            // convert inputstream to string
-            if(inputStream != null)
-                result = convertInputStreamToString(inputStream);
-
-//     Log.i("Result",result);
-
-            else
-                result = "Did not work!";
-        } catch (Exception e) {
-            Log.d("InputStream", "hello"+e);
+            }
+            startActivity(callIntent);
         }
-
-        return result;
-
-
-
-
-    }
-
-
-    private static  String convertInputStreamToString(InputStream inputStream) throws   IOException{
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
-
-    }
-
-*/
-
-//TODO: remove demo markers
-/*    @Override
-    public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
-        GoogleMap.OnPolylineClickListener, GoogleMap.OnPolygonClickListener {
-*/
-
-
-    public void addMarkers(){
-        Log.d("Motherfucking tag",housesInfo.get(0).fullname);
-
-        for(int i=0;i<housesInfo.size();i++){
-
-            LatLng marker = new LatLng(housesInfo.get(i).latitude, housesInfo.get(i).longitude);
-            Log.d("Motherfucking tag", String.valueOf(housesInfo.get(i).latitude));
-            Log.d("Motherfucking tag", String.valueOf(housesInfo.get(i).longitude));
-            mMap.addMarker(new MarkerOptions().position(marker).title(housesInfo.get(i).phonenumber));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
-
+        catch (ActivityNotFoundException activityException){
+            Log.d("Motherfucking tag", "Call failed");
         }
     }
+
+
+        //progressDialog.cancel();
+
+
     public void onMapReady(GoogleMap googleMap) {
+        Log.d("Mother Fucking Tag", "Inside OnMapready");
         mMap = googleMap;
-        addMarkers();
-
-        /*LatLng marker1 = new LatLng(12.3369598, 76.5904817);
-        mMap.addMarker(new MarkerOptions().position(marker1).title("Marker 1"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker1));
-
-        LatLng marker2 = new LatLng(12.3095255, 76.6073671);
-        mMap.addMarker(new MarkerOptions().position(marker2).title("Marker 2"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker2));
-
-        LatLng marker3 = new LatLng(12.3132715, 76.6112378);
-        mMap.addMarker(new MarkerOptions().position(marker3).title("Marker 3"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker3));*/
-
-//        Polyline polyline1 = googleMap.addPolyline(new PolylineOptions().clickable(true).add(marker1, marker2, marker3));
-//          mMap.setOnPolylineClickListener(this);
-//        googleMap.setOnPolygonClickListener(this);
-
-        //TODO: Remove the selected marker - on click of marker/demo button on maps
-
-        /*Map<String, Marker> markers = new HashMap();
-
-ref.addChildEventListener(new ChildEventListener() {
-    @Override
-    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        UsersActive uA = dataSnapshot.getValue(UsersActive.class);
-
-        Marker uAmarker = mMap.addMarker(markerOptions);
-        markers.put(dataSnapshot.getKey(), uAmarker);
-    }
-
-    @Override
-    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        UsersActive uA = dataSnapshot.getValue(UsersActive.class);
-
-            if (markers.contains(dataSnapshot.getKey())) {
-            Marker marker = markers.get(dataSnapshot.getKey());
-
-            marker.remove();
-            // or
-            // marker.setPosition(newPosition);
-        }
-
-        Marker uAmarker = mMap.addMarker(markerOptions);
-        markers.put(dataSnapshot.getKey(), uAmarker);
-    }
-
-    @Override
-    public void onChildRemoved(DataSnapshot dataSnapshot) {
-        if (markers.contains(dataSnapshot.getKey())) {
-            Marker marker = markers.get(dataSnapshot.getKey());
-            marker.remove();
-        }
-    }
-
-    @Override
-    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+        mMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                btndemo.setVisibility(View.VISIBLE);
+                call.setVisibility(View.VISIBLE);
+                num=marker.getSnippet();
+                Log.d("Motherfucking tag",num);
+                return false;
+            }
+        });
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                btndemo.setVisibility(View.INVISIBLE);
+                call.setVisibility(View.INVISIBLE);
+                num="";
+                Log.d("Motherfucking tag",num);
+            }
+        });
 
     }
 
-    @Override
-    public void onCancelled(DatabaseError databaseError) {
 
-    }
 
-});
-*/
-    }
+
+
+
 //}
 
 }

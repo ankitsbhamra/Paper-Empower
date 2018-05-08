@@ -61,11 +61,16 @@ public class LandingPage extends AppCompatActivity {
         fbaseauth = FirebaseAuth.getInstance();
         usersref = FirebaseDatabase.getInstance().getReference("users");
         progressDialog = new ProgressDialog(this);
-        pref=getApplicationContext().getSharedPreferences("Paper Empower",0);
-        SharedPreferences.Editor editor=pref.edit();
+        if(fbaseauth.getCurrentUser()!=null){
+            Intent i=new Intent(this,RegisterOrCollect.class);
+            startActivity(i);
+            return;
+        }
+        //pref=getApplicationContext().getSharedPreferences("Paper Empower",0);
+        //SharedPreferences.Editor editor=pref.edit();
 //        Intent in=new Intent(this,RegisterOrCollect.class);//TODO: Remove this
 //        startActivity(in);//TODO: Remove this
-        /*SHARED PREFERENCES NOT WORKING PROPERLY
+        /*
         if(pref.getString(key,"false").equals("val"))
         {
             Log.d("Motherfucking tag","Inside sharedPref if");
@@ -73,12 +78,7 @@ public class LandingPage extends AppCompatActivity {
             startActivity(i);
             return;
         }
-        *///REPLACES SHARED PREFERENCES
-        if (fbaseauth.getCurrentUser()!=null){
-            Intent i = new Intent(LandingPage.this,RegisterOrCollect.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(i);
-        }
+        */
         Button btn= (Button) this.findViewById(R.id.next2);
         btn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -108,8 +108,8 @@ public class LandingPage extends AppCompatActivity {
     private void next(View v)
     {
         Log.d("motherfucking tag","Inside next()");
-        pref=getApplicationContext().getSharedPreferences("Paper Empower",0);
-        SharedPreferences.Editor editor=pref.edit();
+        //pref=getApplicationContext().getSharedPreferences("Paper Empower",0);
+        //SharedPreferences.Editor editor=pref.edit();
         signUpLL= (LinearLayout) this.findViewById(R.id.SignUp);
         //cnfmpwdtv= (TextView) this.findViewById(R.id.confirmPasswordTextView);
         cnfmpwdet= (TextView) this.findViewById(R.id.confirmPasswordEditText);
@@ -119,14 +119,14 @@ public class LandingPage extends AppCompatActivity {
         email=(EditText)this.findViewById(R.id.emailIdEditText);
         String pwdSt=String.valueOf(pwd.getText());
         String emailSt= String.valueOf(email.getText());
-        if(pwdSt.isEmpty()){
-            pwd.setError("Password Cannot Be Empty");
-            pwd.requestFocus();
+        if(emailSt.isEmpty()){
+            email.setError("Email ID is mandatory");
+            email.requestFocus();
             return;
         }
-        if(emailSt.isEmpty()){
-            email.setError("Email Cannot Be Empty");
-            email.requestFocus();
+        if(pwdSt.isEmpty()){
+            pwd.setError("Password is mandatory");
+            pwd.requestFocus();
             return;
         }
         Log.d("Moth","In next()"+emailSt+pwdSt);
@@ -147,7 +147,6 @@ public class LandingPage extends AppCompatActivity {
                     return;
 
                 } else if (task.getException() instanceof FirebaseAuthInvalidUserException) {
-                    Log.d("Motherfucking tag","Inside invalid user");
                     progressDialog.cancel();
                     cnfmpwdet.setVisibility(View.VISIBLE);
                     signUpLL.setVisibility(View.VISIBLE);

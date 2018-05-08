@@ -1,5 +1,6 @@
 package com.sjce.finalyearproject.paperempower;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,14 +24,12 @@ import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
-
+//TODO: Add area drop down
 public class CollectActivity extends AppCompatActivity {
 
     List<HousesInfo> arr=new ArrayList<HousesInfo>();
-    int ctr=0;
-
     //List<HousesInfo> arr1=new ArrayList<HousesInfo>();
-
+    private ProgressDialog progressDialog;
     ArrayList<String> arr2 = new ArrayList<String>();
     Dictionary latCheckedArr=new Hashtable();//Dictionary storing key:latitude value
     Dictionary longCheckedArr=new Hashtable();//Dictionary storing key:longitude value
@@ -40,6 +39,9 @@ public class CollectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collect);
         LinearLayout scrollViewLL= (LinearLayout) this.findViewById(R.id.scrollViewLL);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please Wait");
+        progressDialog.show();
         houses = FirebaseDatabase.getInstance().getReference("houses");
         Log.d("Motherfucking tag","Entering populateArrayList");
         populateArrayList();
@@ -64,7 +66,7 @@ public class CollectActivity extends AppCompatActivity {
 
     void populateArrayList() {
 
-        houses.addValueEventListener(new ValueEventListener() {
+        houses.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //size = dataSnapshot.getChildrenCount();
@@ -78,11 +80,12 @@ public class CollectActivity extends AppCompatActivity {
                     housesInfo.setLatitude(housesSnapshot.getValue(HousesInfo.class).getLatitude());
                     housesInfo.setLongitude(housesSnapshot.getValue(HousesInfo.class).getLongitude());
                     */
-                    arr.add(housesSnapshot.getValue(HousesInfo.class));
-                    Log.d("Motherfucking tag", String.valueOf(arr.size()));
-                    Log.d("Motherfuckingtag", String.valueOf(arr.get(ctr).zipcode));
-                    ctr++;
+                    HousesInfo housesInfo=housesSnapshot.getValue(HousesInfo.class);
+                    if(!housesInfo.completed)
+                        arr.add(housesInfo);
+
                 }
+                progressDialog.cancel();
                 createElements();
 
             }
@@ -97,19 +100,6 @@ public class CollectActivity extends AppCompatActivity {
 
     }
 
-
-
-
-
-        /*
-        HousesInfo hi=new HousesInfo("asdsad","asdsada","23431234","21312312",123.34,345.1,"asdasdsad");
-        arr.add(hi);
-        arr.add(hi);
-        arr.add(hi);
-        arr.add(hi);
-        arr.add(hi);
-        arr.add(hi);
-        */
 
 
 
@@ -157,10 +147,6 @@ public class CollectActivity extends AppCompatActivity {
                         HousesInfo houInf= (HousesInfo) contentDict.get(buttonView.hashCode());
                         Log.d("Motherfucking tag", String.valueOf(buttonView.hashCode()));
                         arr2.add(houInf.key);//Populating arr2 with only keys of selected houses
-                        /*
-                        latCheckedArr.put(houInf.key,houInf.latitude);
-                        longCheckedArr.put(houInf.key,houInf.longitude);
-                        */
                         Log.d("Motherfucking tag", String.valueOf(longCheckedArr.get(houInf.key)));
 
                     }
@@ -205,9 +191,10 @@ public class CollectActivity extends AppCompatActivity {
     }
     */
     public void collectevent(View v){
+        Log.d("MotherFucking tag","Inside Collect Event");
         Intent i=new Intent(this,MapsActivity.class);
         i.putExtra("keyList",arr2);//Passing list of keys of selected house to MapsActivity
-
+        Log.d("MotherFucking tag",arr2.get(0));
         startActivity(i);
     }
 }

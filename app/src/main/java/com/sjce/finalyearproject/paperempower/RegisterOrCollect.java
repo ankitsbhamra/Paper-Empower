@@ -12,23 +12,35 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
 
 public class RegisterOrCollect extends AppCompatActivity {
 
-    private FirebaseAuth fbaseauth;
+    private FirebaseAuth mAuth;
+
     //TODO: Import volunteer name after welcome
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_or_collect);
-        fbaseauth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         Button btnReg= (Button) this.findViewById(R.id.registerButton);
         Button btnCol= (Button) this.findViewById(R.id.collectButton);
         Button btnLog= (Button) this.findViewById(R.id.logoutButton);
+        btnLog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                Intent intent = new Intent(RegisterOrCollect.this,LandingPage.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
         btnReg.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Log.d("Motherfucking tag","Inside Register Button onClick");
+                Log.d("Motherfucking tag","Inside next2 onclick listener");
                 registerEvent(v);
             }
         });
@@ -38,15 +50,6 @@ public class RegisterOrCollect extends AppCompatActivity {
                     collectEvent(v);
                 }
     });
-
-        btnLog.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                Log.d("Motherfucking tag","Inside Logout Button");
-                fbaseauth.signOut();
-                Intent i = new Intent(RegisterOrCollect.this,LandingPage.class);
-                startActivity(i);
-            }
-        });
     }
 
     public void registerEvent(View v){
@@ -58,7 +61,7 @@ public class RegisterOrCollect extends AppCompatActivity {
 //        Intent i=new Intent(this,MapsActivity.class); TODO:CHANGE HERE
         Log.d("Motherfuckingtag","Inside Collect Event");
         Intent i=new Intent(this,CollectActivity.class);
-        Toast.makeText(this,"Choose the houses to collect from",Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"Choose houses to collect from",Toast.LENGTH_LONG).show();
         startActivity(i);
 
     }
