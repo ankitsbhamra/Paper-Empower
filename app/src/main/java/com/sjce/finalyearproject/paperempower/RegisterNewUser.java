@@ -86,6 +86,7 @@ public class RegisterNewUser extends AppCompatActivity {
         name = (EditText) this.findViewById(R.id.nameEditText);
         coord = (Button) this.findViewById(R.id.getCoordinatesButton);
         register = (Button) this.findViewById(R.id.registerHouseButton);
+        area= (Spinner) this.findViewById(R.id.areaDropDownSpinner);
         //if you want to lock screen for always Portrait mode
         //  setRequestedOrientation(ActivityInfo
         //        .SCREEN_ORIENTATION_PORTRAIT);
@@ -109,8 +110,9 @@ public class RegisterNewUser extends AppCompatActivity {
                     areaList.add(areaInfo);
 
                 }
+                populateDropDown(areaList);
 
-            Log.d("Mother", String.valueOf(areaList.size()));
+
             }
 
             @Override
@@ -118,13 +120,10 @@ public class RegisterNewUser extends AppCompatActivity {
                 Toast.makeText(RegisterNewUser.this,"Unable to read from Database",Toast.LENGTH_LONG);
             }
         });
+        Log.d("Mother","Are list size:"+ String.valueOf(areaList.size()));
 
-        for(AreaInfo ai:areaList)
-            areaString.add(ai.name);
+        Log.d("Mother","Are String size:"+ String.valueOf(areaString.size()));
 
-        area= (Spinner) this.findViewById(R.id.areaDropDownSpinner);
-        areaAdapter= new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,areaString);
-        area.setAdapter(areaAdapter);
         locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
 
@@ -147,8 +146,19 @@ public class RegisterNewUser extends AppCompatActivity {
 
 
     }
+
+    public void populateDropDown(List<AreaInfo> areaList)
+    {
+        for(AreaInfo ai:areaList)
+            areaString.add(ai.name);
+        area= (Spinner) this.findViewById(R.id.areaDropDownSpinner);
+        areaAdapter= new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,areaString);
+        area.setAdapter(areaAdapter);
+
+    }
     //App was crashing if register house clicked before getting coordinates,fixed by setting sentinel values
     public void registerHouse(){
+        Log.d("Moth","Inside RegisterHouse");
         zipcode = (EditText) this.findViewById(R.id.zipcodeEditText);
         name = (EditText) this.findViewById(R.id.nameEditText);
         number = (EditText) this.findViewById(R.id.phNumberEditText);
@@ -171,8 +181,8 @@ public class RegisterNewUser extends AppCompatActivity {
 
         if(!latitudeStr.equals("Latitude:")&&!longitudeStr.equals("Longitude:"))
         {
-            lat=Double.parseDouble(latitudeStr.substring(4));
-            lon=Double.parseDouble(longitudeStr.substring(4));
+            lat=Double.parseDouble(latitudeStr.substring(9));
+            lon=Double.parseDouble(longitudeStr.substring(10));
         }
         //TODO: String values are not getting extracted from Edit Texts. Being Stored in some weird format in FireBase
         String zip = zipcode.getText().toString().trim();
@@ -183,9 +193,10 @@ public class RegisterNewUser extends AppCompatActivity {
         String additionalDetailsStr = additionalDetails.getText().toString().trim();
         String num = number.getText().toString().trim();
         String doorStr = door.getText().toString().trim();
+        Log.d("Moth",doorStr);
         String areaSt=area.getSelectedItem().toString();
         String areaKey=null;
-
+        Log.d("Moth",areaSt);
         for(AreaInfo ai:areaList)
             if((ai.name).equals(areaSt))
                 areaKey=ai.key;
