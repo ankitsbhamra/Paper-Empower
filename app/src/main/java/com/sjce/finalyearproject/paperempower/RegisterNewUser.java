@@ -16,6 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -69,7 +70,6 @@ public class RegisterNewUser extends AppCompatActivity {
     List<AreaInfo> areaList=new ArrayList<>();
     List<String> areaString=new ArrayList<>();
     ArrayAdapter<String> areaAdapter;
-
     private static final String TAG = "Motherfucking tag";
     private Boolean flag = false;
 
@@ -206,7 +206,6 @@ public class RegisterNewUser extends AppCompatActivity {
         {
             area.requestFocus();
             Toast.makeText(this,"Select an area",Toast.LENGTH_LONG).show();
-            return;
         }
         if(fullname.isEmpty()){
             name.setError("Name Cannot Be Empty");
@@ -235,7 +234,6 @@ public class RegisterNewUser extends AppCompatActivity {
         }
         if(additionalDetailsStr.isEmpty()){
             additionalDetailsStr="";
-            return;
         }
         if((num.isEmpty())||(num.length()!=10)){
             number.setError("Phone Number Must Be 10 Digits");
@@ -263,6 +261,7 @@ public class RegisterNewUser extends AppCompatActivity {
 
         Toast.makeText(RegisterNewUser.this, "House Registered!", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(RegisterNewUser.this,RegisterOrCollect.class);
+        SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(this);
         startActivity(intent);
     }
 

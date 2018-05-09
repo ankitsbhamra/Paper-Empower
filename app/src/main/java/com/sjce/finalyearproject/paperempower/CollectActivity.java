@@ -30,7 +30,7 @@ public class CollectActivity extends AppCompatActivity {
     List<HousesInfo> arr=new ArrayList<HousesInfo>();
     //List<HousesInfo> arr1=new ArrayList<HousesInfo>();
     private ProgressDialog progressDialog;
-    ArrayList<String> arr2 = new ArrayList<String>();
+    ArrayList<String> arr2 = new ArrayList<String>();//Array of keys of checked Houses
     Dictionary latCheckedArr=new Hashtable();//Dictionary storing key:latitude value
     Dictionary longCheckedArr=new Hashtable();//Dictionary storing key:longitude value
     DatabaseReference houses;
@@ -173,7 +173,7 @@ public class CollectActivity extends AppCompatActivity {
     {
 
         if(latCheckedArr.isEmpty()&&longCheckedArr.isEmpty())
-            Toast.makeText(this,"Choose your destination and navigate",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Please select a house to navigate",Toast.LENGTH_LONG).show();
         /*else
         {
 
@@ -192,6 +192,11 @@ public class CollectActivity extends AppCompatActivity {
     */
     public void collectevent(View v){
         Log.d("MotherFucking tag","Inside Collect Event");
+        if(arr2.isEmpty())
+        {
+            Toast.makeText(CollectActivity.this,"Please select a house to navigate",Toast.LENGTH_LONG);
+            return;
+        }
         Intent i=new Intent(this,MapsActivity.class);
         i.putExtra("keyList",arr2);//Passing list of keys of selected house to MapsActivity
         Log.d("MotherFucking tag",arr2.get(0));
