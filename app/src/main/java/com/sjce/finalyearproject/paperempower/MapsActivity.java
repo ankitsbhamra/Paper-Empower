@@ -47,7 +47,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ProgressDialog progressDialog;
     int ctr = 0;
     String num;
-
+    Marker tempMarker;
     Button btndemo;
     Button call;
 
@@ -65,7 +65,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final ArrayList<String> keyList = (ArrayList<String>) getIntent().getSerializableExtra("keyList");
         //Log.d("MotherFucking Tag",keyList.get(0));
         mapFragment.getMapAsync(this);
-        houses.addValueEventListener(new ValueEventListener() {
+        houses.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("MotherFucking Tag", "Inside onDataChange");
@@ -170,13 +170,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.d("Motherfucking tag", "Number Found");
                 Log.d("Motherfucking tag", hi.phonenumber);
                 //housesInfo.remove(hi);
+                houses.child(ckey).child("completed").setValue(true);
                 break;
             }
         }
-        houses.child(ckey).child("completed").setValue(true);
+        tempMarker.setVisible(false);
         Log.d("Motherfucking tag", "Data Changed");
-        mMap.clear();
-        //progressDialog.cancel();
+        progressDialog.cancel();
     }
 
     public void callnumber() {
@@ -213,6 +213,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(new OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+                tempMarker=marker;
                 btndemo.setVisibility(View.VISIBLE);
                 call.setVisibility(View.VISIBLE);
                 num=marker.getSnippet();
